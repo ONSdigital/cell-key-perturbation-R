@@ -27,7 +27,7 @@ test_that("Test that perturbed table for geog=var1 & tab_vars=var5,var8 is as ex
   tab_vars <- c("var5","var8")
   record_key <-"record_key"
 
-  #result <- create_perturbed_table(micro, geog, tab_vars, record_key, ptable_10_5)
+  result <- create_perturbed_table(micro, geog, tab_vars, record_key, ptable_10_5)
 
   expected_result <- fread("perturbed_table_var1_var5_var8.csv")
 
