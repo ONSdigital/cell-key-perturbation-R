@@ -2,12 +2,12 @@
 % Please edit documentation in R/create_perturbed_table.R
 \name{create_perturbed_table}
 \alias{create_perturbed_table}
-\title{Create a frequency table which has has a cell key perturbation applied}
+\title{Create a frequency table which has had cell key perturbation applied}
 \usage{
-create_perturbed_table(data, geog, tab_vars, record_key_arg, ptable)
+create_perturbed_table(data_table, geog, tab_vars, record_key_arg, ptable)
 }
 \arguments{
-\item{data}{A data.table containing the data to be tabulated and perturbed}
+\item{data_table}{A data.table containing the data to be tabulated and perturbed}
 
 \item{geog}{A string vector giving the column name in 'data' that contains the desired geography level for the frequency table}
 
@@ -21,31 +21,34 @@ create_perturbed_table(data, geog, tab_vars, record_key_arg, ptable)
 Returns a data.table giving a frequency table which has had cell key perturbation applied according to the ptable supplied.
 }
 \description{
-'create_perturbed_table()' creates a frequency table which has has a
-cell key perturbation technique applied with help from a p-table which
-determines how perturbation is applied.
+'create_perturbed_table()' creates a frequency table which has had
+cell key perturbation applied to the counts.
 The perturbation adds a small amount of noise to some cells in a table,
-meaning that users cannot be sure whether differences between tables
-represent a real person, or are caused by the perturbation.
-Cell Key Perturbation is consistent and repeatable, so the same cells are
-always perturbed in the same way.
+changing their values. A p-table file needs to be supplied
+which determines which cells are perturbed. The data needs to contain a
+'record key' variable which along with the ptable allows the process to be
+repeatable and consistent.
+The perturbation adds uncertainty to small values to reduce the risk of
+disclosure. It protects against the risk of disclosure by differencing
+since it cannot be determined whether a difference between two similar tables
+represents a real person, or is caused by the perturbation.
 }
 \examples{
-micro <- fread("census_2011.csv")
-ptable_10_5 <- fread("ptable_10_5_rule.csv")
+library(data.table)
+micro <- fread("data/micro.csv")
+ptable_10_5 <- fread("data/ptable_10_5_rule.csv")
 
-geog <- c("Region")
-tab_vars <- c("Age","Health","Occupation")
-record_key_arg <-"record_key"
+geog <- c("var1")
+tab_vars <- c("var2","var3","var4")
+record_key <-"record_key"
 
-perturbed_table  <- create_perturbed_table(micro, geog, tab_vars, record_key_arg, ptable_10_5)
+perturbed_table  <- create_perturbed_table(micro, geog, tab_vars, record_key, ptable_10_5)
 
-Using direct inputs, and selecting no geography breakdown:
-
-perturbed_table <-create_perturbed_table(data = micro,
-                                         record_key = "Record_key",
+perturbed_table <-create_perturbed_table(data_table = micro,
+                                         record_key_arg = "record_key",
                                          geog = c(),
-                                         tab_vars = c("Sex","Industry","Occupation"),
+                                         tab_vars = c("var1","var5","var8"),
                                          ptable = ptable_10_5)
+
 
 }
