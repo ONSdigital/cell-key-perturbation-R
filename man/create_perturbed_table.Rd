@@ -2,7 +2,7 @@
 % Please edit documentation in R/create_perturbed_table.R
 \name{create_perturbed_table}
 \alias{create_perturbed_table}
-\title{Create a frequency table which has had cell key perturbation applied}
+\title{Create a frequency table with cell key perturbation applied}
 \usage{
 create_perturbed_table(data_table, geog, tab_vars, record_key_arg, ptable)
 }
@@ -34,21 +34,16 @@ since it cannot be determined whether a difference between two similar tables
 represents a real person, or is caused by the perturbation.
 }
 \examples{
-library(data.table)
-micro <- fread("data/micro.csv")
-ptable_10_5 <- fread("data/ptable_10_5_rule.csv")
-
 geog <- c("var1")
-tab_vars <- c("var2","var3","var4")
-record_key <-"record_key"
+tab_vars <- c("var5","var8")
+record_key_arg <-"record_key"
 
-perturbed_table  <- create_perturbed_table(micro, geog, tab_vars, record_key, ptable_10_5)
+perturbed_table  <- create_perturbed_table(micro, geog, tab_vars, record_key_arg, ptable_10_5)
 
-perturbed_table <-create_perturbed_table(data_table = micro,
-                                         record_key_arg = "record_key",
+perturbed_table <-create_perturbed_table(data = micro,
+                                         record_key = "record_key",
                                          geog = c(),
                                          tab_vars = c("var1","var5","var8"),
                                          ptable = ptable_10_5)
-
 
 }

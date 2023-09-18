@@ -5,7 +5,7 @@ Authors@R:
     person("Iain", "Dove", , "iain.dove@ons.gov.uk", role = c("aut", "cre"))
 Description: R implementation cell key perturbation developed at the 
     UK Office for National Statistics.
-License: use_mit_license()
+License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3

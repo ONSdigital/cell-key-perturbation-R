@@ -1,6 +1,6 @@
 library(data.table)
 
-#' Create a frequency table which has had cell key perturbation applied
+#' Create a frequency table with cell key perturbation applied
 #'
 #' 'create_perturbed_table()' creates a frequency table which has had
 #'  cell key perturbation applied to the counts.
@@ -22,27 +22,28 @@ library(data.table)
 #'
 #' @return Returns a data.table giving a frequency table which has had cell key perturbation applied according to the ptable supplied.
 #'
+#' @import data.table
+#'
 #' @examples
-#' library(data.table)
-#' micro <- fread("data/micro.csv")
-#' ptable_10_5 <- fread("data/ptable_10_5_rule.csv")
-#'
 #' geog <- c("var1")
-#' tab_vars <- c("var2","var3","var4")
-#' record_key <-"record_key"
+#' tab_vars <- c("var5","var8")
+#' record_key_arg <-"record_key"
 #'
-#' perturbed_table  <- create_perturbed_table(micro, geog, tab_vars, record_key, ptable_10_5)
+#' perturbed_table  <- create_perturbed_table(micro, geog, tab_vars, record_key_arg, ptable_10_5)
 #'
-#' perturbed_table <-create_perturbed_table(data_table = micro,
-#'                                          record_key_arg = "record_key",
+#' perturbed_table <-create_perturbed_table(data = micro,
+#'                                          record_key = "record_key",
 #'                                          geog = c(),
 #'                                          tab_vars = c("var1","var5","var8"),
 #'                                          ptable = ptable_10_5)
 #'
-#'
 #' @export
 create_perturbed_table=function(data_table,geog,tab_vars,record_key_arg,ptable)
 {
+  # Bind variables locally to function to prevent
+  # 'No visible binding for global variable' during build check
+  pre_sdc_count <- pcv <- count <- pvalue <- ckey <- NULL
+
   #drop unnecessary columns
   data_table=data_table[,c(geog,tab_vars,record_key_arg),with=FALSE]
 
@@ -66,7 +67,7 @@ create_perturbed_table=function(data_table,geog,tab_vars,record_key_arg,ptable)
   }
 
   #calculate cell keys
-  cellkeys<-setDT(data_table)[,.(ckey = sum(get(record_key_arg))%%(max_ckey+1)), keyby = c(geog,tab_vars)]
+  cellkeys<-setDT(data_table)[,list(ckey = sum(get(record_key_arg))%%(max_ckey+1)), keyby = c(geog,tab_vars)]
   aggregated_table<-merge(aggregated_table,cellkeys,by=c(geog,tab_vars),all.x=TRUE)
 
 
@@ -89,3 +90,5 @@ create_perturbed_table=function(data_table,geog,tab_vars,record_key_arg,ptable)
 
   return(aggregated_table)
 }
+
+
