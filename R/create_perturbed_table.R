@@ -31,7 +31,7 @@ library(data.table)
 #'
 #' perturbed_table  <- create_perturbed_table(micro, geog, tab_vars, record_key_arg, ptable_10_5)
 #'
-#' perturbed_table <-create_perturbed_table(data = micro,
+#' perturbed_table <-create_perturbed_table(data_table = micro,
 #'                                          record_key = "record_key",
 #'                                          geog = c(),
 #'                                          tab_vars = c("var1","var5","var8"),

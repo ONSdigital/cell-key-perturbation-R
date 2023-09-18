@@ -2,3 +2,4 @@
 #ignore tests folder as testthat not working with first version of create_perturbed_table code
 tests/
 .Rhistory
+inst/doc

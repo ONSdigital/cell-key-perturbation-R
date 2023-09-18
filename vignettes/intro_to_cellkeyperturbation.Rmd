@@ -1,0 +1,47 @@
+---
+title: "Introduction to cellkeyperturbation"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to cellkeyperturbation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(cellkeyperturbation)
+```
+This vignette introduces the cellkeyperturbation package. The package contains the create_perturbed_table function which can be used to create a frequency table which has had a cell key perturbation technique applied to the counts according to rules supplied in a perturbation table.
+
+The perturbation adds a small amount of noise to some cells in a table, meaning that users cannot be sure whether differences between tables represent a real person, or are caused by the perturbation. 
+
+Cell Key Perturbation is consistent and repeatable, so the same cells are always perturbed in the same way.
+
+Two datasets are supplied with this package.
+
+micro: A small data set containing randomly generated data to showcase the cell key perturbation method.
+
+ptable_10_5: A ptable containing the rules for applying a perturbation with a threshold of 10, and rounding to base 5.
+
+Example
+-------
+
+```{r}
+str(micro)
+
+str(ptable_10_5)
+
+perturbed_table <-create_perturbed_table(data_table = micro,
+                                          record_key = "record_key",
+                                          geog = c("var1"),
+                                          tab_vars = c("var5","var8"),
+                                          ptable = ptable_10_5)
+
+str(perturbed_table)
+```
