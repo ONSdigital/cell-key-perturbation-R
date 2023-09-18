@@ -4,15 +4,9 @@ library(data.table)
 #'
 #' 'create_perturbed_table()' creates a frequency table which has had
 #'  cell key perturbation applied to the counts.
-#'  The perturbation adds a small amount of noise to some cells in a table,
-#'  changing their values. A p-table file needs to be supplied
-#'  which determines which cells are perturbed. The data needs to contain a
-#'  'record key' variable which along with the ptable allows the process to be
-#'  repeatable and consistent.
-#'  The perturbation adds uncertainty to small values to reduce the risk of
-#'  disclosure. It protects against the risk of disclosure by differencing
-#'  since it cannot be determined whether a difference between two similar tables
-#'  represents a real person, or is caused by the perturbation.
+#'  A p-table file needs to be supplied which determines which cells are perturbed.
+#'  The data needs to contain a 'record key' variable which along with the
+#'  ptable allows the process to be repeatable and consistent.
 #'
 #' @param data_table A data.table containing the data to be tabulated and perturbed
 #' @param geog A string vector giving the column name in 'data' that contains the desired geography level for the frequency table

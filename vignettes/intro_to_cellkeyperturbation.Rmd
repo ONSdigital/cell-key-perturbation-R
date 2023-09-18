@@ -19,11 +19,20 @@ library(cellkeyperturbation)
 ```
 This vignette introduces the cellkeyperturbation package. The package contains the create_perturbed_table function which can be used to create a frequency table which has had a cell key perturbation technique applied to the counts according to rules supplied in a perturbation table.
 
-The perturbation adds a small amount of noise to some cells in a table, meaning that users cannot be sure whether differences between tables represent a real person, or are caused by the perturbation. 
+The perturbation adds a small amount of noise to some cells in a table, changing their values. This adds uncertainty to small values to reduce the risk of disclosure. It protects against the risk of disclosure by differencing since it cannot be determined whether a difference between two similar tables represents a real person, or is caused by the perturbation.
 
 Cell Key Perturbation is consistent and repeatable, so the same cells are always perturbed in the same way.
 
-Two datasets are supplied with this package.
+Data
+-------
+
+The create_perturbed_table function needs to be supplied with 
+
+1. A data.table containing the data to be tabulated and perturbed. The data must contain a 'record key' variable and consist of one row per statistical unit (person, household, business or other) and one column per variable (age, sex, health status).
+
+2. A data.table containing a p-table which provides the rules for the perturbation to be applied.
+
+Two example data sets are supplied with this package:
 
 micro: A small data set containing randomly generated data to showcase the cell key perturbation method.
 
