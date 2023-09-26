@@ -1,11 +1,12 @@
 #' Perturbation table
 #'
 #'  A data set containing the rules to apply cell key perturbation with a
-#'  threshold of 10, and rounding to base 5.
+#'  threshold of 10, and rounding to base 5. In other words, counts less than
+#'  10 will be removed, and all others will be rounded to the nearest 5.
 #'
 #' \itemize{
 #'   \item pcv. perturbation cell value (1-750)
-#'   \item ckey. cell key value
+#'   \item ckey. cell key value (0-255)
 #'   \item pvalue. perturbation value to be applied
 #' }
 #'

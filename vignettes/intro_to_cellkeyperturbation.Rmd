@@ -46,7 +46,7 @@ str(micro)
 
 str(ptable_10_5)
 
-perturbed_table <-create_perturbed_table(data_table = micro,
+perturbed_table <-create_perturbed_table(data = micro,
                                           record_key = "record_key",
                                           geog = c("var1"),
                                           tab_vars = c("var5","var8"),
