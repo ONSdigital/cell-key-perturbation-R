@@ -2,8 +2,8 @@ Package: cellkeyperturbation
 Title: R implementation of cell key perturbation
 Version: 0.0.0.9000
 Authors@R: 
-    person("Iain", "Dove", , "iain.dove@ons.gov.uk", role = c("aut", "cre"))
-Description: R implementation cell key perturbation developed at the 
+    person("Iain", "Dove", , "SMLHelp@ons.gov.uk", role = c("aut", "cre"))
+Description: R implementation of cell key perturbation developed at the
     UK Office for National Statistics.
 License: MIT + file LICENSE
 Encoding: UTF-8
