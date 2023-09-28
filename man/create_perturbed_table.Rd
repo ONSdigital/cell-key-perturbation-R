@@ -38,13 +38,13 @@ ptable allows the process to be repeatable and consistent.
 \examples{
 geog <- c("var1")
 tab_vars <- c("var5","var8")
-record_key_arg <-"record_key"
+record_key <-"record_key"
 
 perturbed_table <-
- create_perturbed_table(micro, geog, tab_vars, record_key_arg, ptable_10_5)
+ create_perturbed_table(micro, geog, tab_vars, record_key, ptable_10_5)
 
 perturbed_table <-create_perturbed_table(data = micro,
-                                         record_key = "record_key",
+                                         record_key_arg = "record_key",
                                          geog = c(),
                                          tab_vars = c("var1","var5","var8"),
                                          ptable = ptable_10_5)
