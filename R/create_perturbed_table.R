@@ -29,13 +29,13 @@ library(data.table)
 #' @examples
 #' geog <- c("var1")
 #' tab_vars <- c("var5","var8")
-#' record_key_arg <-"record_key"
+#' record_key <-"record_key"
 #'
 #' perturbed_table <-
-#'  create_perturbed_table(micro, geog, tab_vars, record_key_arg, ptable_10_5)
+#'  create_perturbed_table(micro, geog, tab_vars, record_key, ptable_10_5)
 #'
 #' perturbed_table <-create_perturbed_table(data = micro,
-#'                                          record_key = "record_key",
+#'                                          record_key_arg = "record_key",
 #'                                          geog = c(),
 #'                                          tab_vars = c("var1","var5","var8"),
 #'                                          ptable = ptable_10_5)
@@ -46,10 +46,15 @@ create_perturbed_table=function(data,geog,tab_vars,record_key_arg,ptable)
 
   # Type validation on input data & ptable
   if (!is.data.table(data)) {
-    stop("Specified value for data must be a data.table")
+    stop("Specified value for data must be a data.table.")
   }
   if (!is.data.table(ptable)) {
-    stop("Specified value for ptable must be a data.table")
+    stop("Specified value for ptable must be a data.table.")
+  }
+
+  # Check that at least one variable specified for geog or tab_vars
+  if (length(geog)==0 & length(tab_vars)==0)  {
+    stop("No variables have been specified for tabulation. Please specify a value for geog or tab_vars.")
   }
 
   # Check geog, tab_vars & record_key_arg specified are contained within 'data'
@@ -58,8 +63,10 @@ create_perturbed_table=function(data,geog,tab_vars,record_key_arg,ptable)
       stop("Specified value for geog must be a column name in data.")
     }
   }
-  if (!all(tab_vars %in% colnames(data))){
-    stop("Specified values for tab_vars must be column names in data.")
+  if (length(tab_vars)>0){
+    if (!all(tab_vars %in% colnames(data))){
+      stop("Specified values for tab_vars must be column names in data.")
+    }
   }
   if (!(record_key_arg %in% colnames(data))){
     stop("Specified value for record_key_arg must be a column name in data.")

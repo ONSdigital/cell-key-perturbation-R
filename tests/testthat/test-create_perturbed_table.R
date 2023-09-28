@@ -3,6 +3,7 @@
 # =============================================================================
 # Test
 # - 1. type validation on input data & ptable
+# - 2. variables supplied for tabulation
 # - 2. geog, tab_vars & record_key_arg specified are contained within data
 # - 3. ptable has correct format
 # - 4. perturbed table content matches expected output
@@ -36,7 +37,21 @@ test_that("error raised if ptable supplied NOT a data.table", {
 })
 
 # -----------------------------------------------------------------------------
-# TESTS: 2. Check errors raised if geog, tab_vars & record_key_arg not within data
+# TESTS: 2. Check errors raised if geog & tab_vars are empty vectors
+# -----------------------------------------------------------------------------
+
+test_that("error raised if geog & tab_vars are empty.", {
+  expect_error(create_perturbed_table(data = micro,
+                                      geog = c(),
+                                      tab_vars = c(),
+                                      record_key_arg = "record_key",
+                                      ptable = ptable_10_5),
+  "No variables have been specified for tabulation. Please specify a value for geog or tab_vars.",
+  fixed = TRUE)
+})
+
+# -----------------------------------------------------------------------------
+# TESTS: 3 Check errors raised if geog, tab_vars & record_key_arg not within data
 # -----------------------------------------------------------------------------
 
 test_that("error raised if geog not a column within data", {
@@ -70,7 +85,7 @@ test_that("error raised if record_key_arg not a column within data", {
 })
 
 # -----------------------------------------------------------------------------
-# TESTS: 3. Check errors raised if ptable has incorrect format
+# TESTS: 4. Check errors raised if ptable has incorrect format
 # -----------------------------------------------------------------------------
 
 dodgy_ptable = data.table(
@@ -90,7 +105,7 @@ test_that("error raised if ptable does not contain required column names", {
 })
 
 # -----------------------------------------------------------------------------
-# TESTS: 4. Check perturbed table content matches expected output
+# TESTS: 5. Check perturbed table content matches expected output
 # -----------------------------------------------------------------------------
 
 # Create perturbed table for micro data using geog=var1 & tab_vars=var5,var8
