@@ -27,8 +27,8 @@ devtools::install_github("ONSdigital/cell-key-perturbation-R")
 
 ## Example
 
-This is an example which showing how to create a perturbed table from
-data included in this package in order to showcase the method.
+This is an example showing how to create a perturbed table from data
+which has been included in this package in order to showcase the method.
 
 micro is an example dataset containing randomly generated data.
 
