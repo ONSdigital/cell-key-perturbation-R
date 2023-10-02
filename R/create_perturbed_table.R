@@ -92,6 +92,11 @@ create_perturbed_table=function(data,geog,tab_vars,record_key_arg,ptable)
   #using 'table' function to get zero cells
   aggregated_table<-as.data.table(table(data[,c(geog,tab_vars),with=FALSE]))
   colnames(aggregated_table)[colnames(aggregated_table) == "N"] <- "pre_sdc_count"
+  # Fix: If only 1 variable specified, column is named V1.
+  # Rename to original column name to prevent later merge failing.
+  if (length(cols) == 1) {
+    colnames(aggregated_table)[colnames(aggregated_table) == "V1"] <- cols
+  }
 
   #adjust for using cellkeys of 256 or other (e.g. 4095)
   max_ckey<-max(ptable$ckey)
