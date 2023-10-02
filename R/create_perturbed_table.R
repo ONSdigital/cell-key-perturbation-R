@@ -57,6 +57,11 @@ create_perturbed_table=function(data,geog,tab_vars,record_key_arg,ptable)
     stop("No variables have been specified for tabulation. Please specify a value for geog or tab_vars.")
   }
 
+  # Check that variable specified for record_key_arg
+  if (length(record_key_arg)==0)  {
+    stop("Please specify a value for record_key_arg.")
+  }
+
   # Check geog, tab_vars & record_key_arg specified are contained within 'data'
   if (length(geog)>0){
     if (!(geog %in% colnames(data))){
