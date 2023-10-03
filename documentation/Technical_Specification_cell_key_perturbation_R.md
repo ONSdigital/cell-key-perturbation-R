@@ -4,7 +4,7 @@
 
 Support area -- Methodology -- Statistical Disclosure Control
 
-Support contact <sdc.queries@ons.gov.uk>
+Support contact <smlhelp@ons.gov.uk.>
 
 Method theme -- disclosure control
 
