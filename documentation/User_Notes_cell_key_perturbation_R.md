@@ -16,7 +16,7 @@
 
  | Document version  | Description |Author(s)       |     Date        |    Comments      |
  |:---               | :----       |:---            |:---             |:---              |      
- |1.0                |First draft based on python version  | Elinor Everitt      |28/09/23         |First draft 
+ |1.0                |First draft based on python version  | Elinor Everitt      |03/10/23         |First draft 
 
 ### Method Specification
 
@@ -24,17 +24,25 @@
 
 ### How to run the method (single or multi language)
 
-Please see the following link to the Cell Key Perturbation GitHub
-repository:
-
+Please see the following link to the Cell Key Perturbation GitHub repository:
 <https://github.com/ONSdigital/cell-key-perturbation-R>
 
-R version can be accessed using the following code to
-import:
+R version can be accessed using the following code to import:
 ```
 # install.packages("devtools")
 devtools::install_github("ONSdigital/cell-key-perturbation-R")
 ```
+
+Once the package is loaded, help pages for the package can be viewed: 
+```
+library(cellkeyperturbation)
+help(package=cellkeyperturbation)
+```
+The help pages include 
+- Introduction to cellkeyperturbation vignette
+- create_perturbed_table - describes the main function used to create a frequency table with perturbation applied
+- micro - an example randomly generated dataset to showcase the method
+- ptable_10_5 - an example ptable for applying perturbation with a threshold of 10 and rounding to base 5
 
 ### Pre-processing and assumptions
 
@@ -92,11 +100,10 @@ devtools::install_github("ONSdigital/cell-key-perturbation-R")
 
 2.  Load the package.
 ```
-library(cell_key_perturbation)
+library(cellkeyperturbation)
 ```
 
-3.  Ensure that the data and ptable to be used are both ready to pass to the  
-    method in the form of a data.table. An example dataset (micro) and ptable 
+3.  Ensure that the data and ptable to be used are both ready to pass to the method in the form of a data.table. An example dataset (micro) and ptable 
     (ptable_10_5) are supplied with the method and are ready to be used.
 
 4.  Set the geog and tab_vars parameters. These will both need to be defined as
