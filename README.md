@@ -15,6 +15,11 @@ caused by the perturbation.
 Cell Key Perturbation is consistent and repeatable, so the same cells
 are always perturbed in the same way.
 
+To improve speed and reduce memory usage for very large datasets, this
+package uses the data.table package. Data passed in to the method must
+be a data table, and the perturbed frequency table is returned as a data
+table.
+
 ## Installation
 
 You can install the development version of cellkeyperturbation from
@@ -30,10 +35,12 @@ devtools::install_github("ONSdigital/cell-key-perturbation-R")
 This is an example showing how to create a perturbed table from data
 which has been included in this package in order to showcase the method.
 
-micro is an example dataset containing randomly generated data.
+micro is an example dataset (data table) containing randomly generated
+data.
 
-ptable_10_5 is an example ptable containing the rules to apply cell key
-perturbation with a threshold of 10 and rounding to base 5.
+ptable_10_5 is an example ptable (data table) containing the rules to
+apply cell key perturbation with a threshold of 10 and rounding to base
+5.
 
 ``` r
 library(cellkeyperturbation)
