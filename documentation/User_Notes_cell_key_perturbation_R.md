@@ -16,32 +16,38 @@
 
  | Document version  | Description |Author(s)       |     Date        |    Comments      |
  |:---               | :----       |:---            |:---             |:---              |      
- |1.0                |First draft based on python version  | Elinor Everitt      |28/09/23         |First draft 
+ |1.0                |First draft based on python version  | Elinor Everitt      |03/10/23         |First draft 
 
 ### Method Specification
 
-(...add link to method spec...)
+<https://github.com/ONSdigital/cell-key-perturbation-R/blob/main/documentation/Method_Specification_cell_key_perturbation_R.md>
 
 ### How to run the method (single or multi language)
 
-Please see the following link to the Cell Key Perturbation GitHub
-repository:
-
+Please see the following link to the Cell Key Perturbation GitHub repository:
 <https://github.com/ONSdigital/cell-key-perturbation-R>
 
-R version can be accessed using the following code to
-import:
-
-(...add code...)
-
+R version can be accessed using the following code to import:
+```
+# install.packages("devtools")
+devtools::install_github("ONSdigital/cell-key-perturbation-R")
 ```
 
+Once the package is loaded, help pages for the package can be viewed: 
 ```
+library(cellkeyperturbation)
+help(package=cellkeyperturbation)
+```
+The help pages include 
+- Introduction to cellkeyperturbation vignette
+- create_perturbed_table - describes the main function used to create a frequency table with perturbation applied
+- micro - an example randomly generated dataset to showcase the method
+- ptable_10_5 - an example ptable for applying perturbation with a threshold of 10 and rounding to base 5
 
 ### Pre-processing and assumptions
 
 The code is intended for use when producing frequency tables based on
-microdata (row-level data, one row per statistical unit -- person
+microdata (row-level data, one row per statistical unit - person,
 household etc.). The microdata will contain one column per variable,
 which is expected to be categorical (they can be numeric but categorical
 is more suitable for frequency tables). The microdata will also contain
@@ -63,21 +69,21 @@ ensure safe outputs. Other ptables may be available depending on the
 data used, for example census data will require the ptable_census21 to
 be used.
 
-Example rows of a ptable are shown below:
- 
-  | pcv  | ckey  | pvalue | 
-  |   1  |    0  |    -1  | 
-  |   1  |    1  |    -1  | 
-  |   1  |    2  |    -1  | 
-  |   1  |    3  |    -1  | 
-  |   1  |    4  |    -1  | 
-  | ...  |  ...  |   ...  |                    
-  | 750  |  251  |     0  |
-  | 750  |  252  |     0  |
-  | 750  |  253  |     0  |
-  | 750  |  254  |     0  |
-  | 750  |  255  |     0  |
+Example rows of a ptable are shown below:  
 
+ | pcv  | ckey  | pvalue |
+ |:---  | :---- | :----  |
+ |   1  |    0  |    -1  | 
+ |   1  |    1  |    -1  | 
+ |   1  |    2  |    -1  | 
+ |   1  |    3  |    -1  | 
+ |   1  |    4  |    -1  |  
+ | ...  |  ...  |   ...  |    
+ | 750  |  251  |     0  |
+ | 750  |  252  |     0  | 
+ | 750  |  253  |     0  | 
+ | 750  |  254  |     0  |  
+ | 750  |  255  |     0  |
 
 The microdata and ptable are provided as arguments to the perturbation
 function.
@@ -86,27 +92,32 @@ The user decides which variables they would like to be tabulated.
 
 Step-by-step instructions:
 
-1.  Install the cell key perturbation package, using the
-    following line: (...add instructions...)
+1.  Install the cell key perturbation package.
+```
+# install.packages("devtools")
+devtools::install_github("ONSdigital/cell-key-perturbation-R")
+```
 
-2.  Load the package  using the following line: 'library(cell_key_perturbation)'
+2.  Load the package.
+```
+library(cellkeyperturbation)
+```
 
-3.  Ensure that the data and ptable to be used are both ready to pass to the  
-    method in the form of a data.table. An example dataset (micro) and ptable 
+3.  Ensure that the data and ptable to be used are both ready to pass to the method in the form of a data.table. An example dataset (micro) and ptable 
     (ptable_10_5) are supplied with the method and are ready to be used.
 
-4.  Set the geog and tab_vars. These will both need to be defined as
+4.  Set the geog and tab_vars parameters. These will both need to be defined as
     vectors. For tab_vars, the variables should be supplied in a vector
     of strings e.g. ```c("Age","Health","Occupation")```. The variables
-    can also be left blank, i.e. ```tab_vars=c()```. The geography is also
+    can also be left blank, i.e. ```tab_vars=c()``` or ```tab_vars=NULL```. The geography is also
     supplied as a vector e.g. ```c("Region")```. An example is included in
     the docstrings. We strongly expect users to tabulate at a given
     geography level e.g. Local Authority, Ward. If no geography is
     required, so records from all geographical areas are together, then
     a 'national' geography including all areas could be used,
-    alternatively the geography can be left blank with c() (i.e.
-    ```geog=c()```). However, at least one of 'tab_vars' or 'geog' must be
-    populated - if both are left blank with c() the code will not work.
+    alternatively the geography can be left blank (i.e.
+    ```geog=c()```or ```geog=NULL```.). However, at least one of 'tab_vars' or 'geog' must be
+    populated - if both are left blank the code will not work.
 
 5.  Define the arguments of the create_perturbed_table function (data,
     record_key_arg, geog, tab_vars and ptable) and run the function to
@@ -128,6 +139,7 @@ The table will be in the following format:
 
 
   | ckey  | pcv  | var1 | var5 | var8 | pre_sdc_count | pvalue | count  |
+  |:---   | :---- | :---- |:---- | :---- |:----          | :---- |:---- | 
   |  64   |  16  |  1   |   1  |   A  |      16       |   -1   |   15   | 
   | 196   |   5  |  1   |   1  |   B  |       5       |   -5   |    0   | 
   | 123   |  10  |  1   |   1  |   C  |      10       |    0   |   10   | 
@@ -148,7 +160,7 @@ values and cell keys.
 
 To reduce the size of the ptable, only 750 rows are used, and rows
 501-750 are used repeatedly for larger cell values. E.g. instead of
-containing 100,001 rows, when the cell value is 100,001 the 501^st^ row
+containing 100,001 rows, when the cell value is 100,001 the 501st row
 is used. Rows 501-750 will be used for cell values of 501-750, as well
 as 751-1000, 1001-1250, 1251-1500 and so on. To achieve this effect an
 alternative cell value column is calculated which will be between 0-750.
@@ -160,7 +172,7 @@ cell values above 750, the values are transformed by -1, modulo 250,
 After the pcv and cell keys are calculated, the ptable can be merged on,
 matching on pcv and 'ckey'. This merge provides a 'pvalue' for each
 cell. The post perturbation count ('count' column) is the
-pre-perturbation count ('rs_cv'), plus the perturbation value
+pre-perturbation count ('pre_sdc_count'), plus the perturbation value
 ('pvalue'). After this step, the counts have had the required
 perturbation applied. The output is the frequency table with the
 post-perturbation 'count' column.

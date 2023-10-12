@@ -4,7 +4,7 @@
 
 Support area -- Methodology -- Statistical Disclosure Control
 
-Support contact <sdc.queries@ons.gov.uk>
+Support contact <smlhelp@ons.gov.uk.>
 
 Method theme -- disclosure control
 
@@ -59,10 +59,10 @@ approximately uniformly distributed. Census record keys are in the range
 
 tab_vars - The variables to be tabulated are supplied, not including
 geography. No variables can be used by entering tab_vars as a blank
-vector ```( tab_vars = \c() \) )```.
+vector ```( tab_vars=c() or tab_vars=NULL) )```.
 
 geog -- the geographic level for the data to be tabulated by. No
-geography can be used by entering geog as a blank vector ```( geog = \c() \)```. If no geography and no tab_vars are entered the code will fail (no
+geography can be used by entering geog as a blank vector ```( geog=c() or geog=NULL)```. If no geography and no tab_vars are entered the code will fail (no
 variables to tabulate).
 
 ptable - A parameter file, known as the 'ptable' also needs to be

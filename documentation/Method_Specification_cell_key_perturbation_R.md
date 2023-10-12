@@ -1,8 +1,3 @@
----
-output:
-  html_document: default
-  pdf_document: default
----
 # Statistical Method Specification - Cell key perturbation in R
 
 ## Overview
@@ -226,16 +221,14 @@ str(perturbed_table)
 
 ### Code
 
-R code can be found in GitHub: [ons-sml/cell-key-perturbation-R:
-SML integration of ONSdigital/cell-key-perturbation-R
-(github.com)](https://github.com/ons-sml/cell-key-perturbation-R)
+R code can be found in GitHub: 
+<https://github.com/ONSdigital/cell-key-perturbation-R/tree/main>
 
-R version can be accessed via (...to be added...) using the following code to
+R version can be accessed via Artifactory using the following code to
 import:
 
-(...code to be added...)
-
 ```
+install.packages(“cellkeyperturbation”)
 
 library(cellkeyperturbation)
 ```
