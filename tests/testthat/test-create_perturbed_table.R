@@ -17,7 +17,7 @@
 # =============================================================================
 
 # -----------------------------------------------------------------------------
-# TESTS: 1. Check type validation on input data & ptable
+# TESTS:1. Check type validation on input data & ptable
 # -----------------------------------------------------------------------------
 
 test_that("error raised if input data NOT a data.table", {
@@ -39,7 +39,7 @@ test_that("error raised if ptable supplied NOT a data.table", {
 })
 
 # -----------------------------------------------------------------------------
-# TESTS: 2. Check error raised if geog & tab_vars are both NULL or empty vectors
+# TESTS:2. Check error raised if geog & tab_vars are both NULL or empty vectors
 # -----------------------------------------------------------------------------
 
 test_that("error raised if geog & tab_vars are both NULL.", {
@@ -48,7 +48,7 @@ test_that("error raised if geog & tab_vars are both NULL.", {
                                       tab_vars = NULL,
                                       record_key_arg = "record_key",
                                       ptable = ptable_10_5),
-  "No variables have been specified for tabulation. Please specify a value for geog or tab_vars.",
+  "No variables for tabulation. Specify value for geog or tab_vars.",
   fixed = TRUE)
 })
 
@@ -58,12 +58,12 @@ test_that("error raised if both geog & tab_vars are empty.", {
                                       tab_vars = c(),
                                       record_key_arg = "record_key",
                                       ptable = ptable_10_5),
-  "No variables have been specified for tabulation. Please specify a value for geog or tab_vars.",
+  "No variables for tabulation. Specify value for geog or tab_vars.",
   fixed = TRUE)
 })
 
 # -----------------------------------------------------------------------------
-# TESTS: 3 Check Check error raised if record_key_arg not specified
+# TESTS:3 Check Check error raised if record_key_arg not specified
 # -----------------------------------------------------------------------------
 
 test_that("error raised if record_key_arg not specified", {
@@ -77,7 +77,7 @@ test_that("error raised if record_key_arg not specified", {
 })
 
 # -----------------------------------------------------------------------------
-# TESTS: 4 Check errors raised if geog, tab_vars & record_key_arg not within data
+# TESTS:4 Check errors raised if geog, tab_vars & record_key_arg not within data
 # -----------------------------------------------------------------------------
 
 test_that("error raised if geog not a column within data", {
@@ -114,7 +114,7 @@ test_that("error raised if record_key_arg not a column within data", {
 # TESTS: 5. Check errors raised if ptable has incorrect format
 # -----------------------------------------------------------------------------
 
-dodgy_ptable = data.table(
+dodgy_ptable <- data.table(
   pcv = 1:5,
   ckey = 6:10,
   zvalue = 11:15
@@ -126,9 +126,31 @@ test_that("error raised if ptable does not contain required column names", {
                                       tab_vars = c("var5","var8"),
                                       record_key_arg = "record_key",
                                       ptable = dodgy_ptable),
-          "Supplied ptable must contain columns called 'pcv','ckey' and 'pvalue'",
-          fixed = TRUE)
+        "Supplied ptable must contain columns named 'pcv','ckey' and 'pvalue'",
+        fixed = TRUE)
 })
+
+# -----------------------------------------------------------------------------
+# TESTS: 6. Check warning given if max record key in data and max cell key
+#           in ptable are different
+# -----------------------------------------------------------------------------
+
+# Create dataset with record_key up to 254 (ptable_10_5 has max value of
+# cell key as 255)
+dodgy_data <- data.table(
+  record_key = 0:254,
+  var1 = 1:255,
+  var2 = 11:265
+)
+
+test_that("warning if max record key and max cell key are different", {
+  expect_warning(create_perturbed_table(data = dodgy_data,
+                                      geog = c("var1"),
+                                      tab_vars = c("var2"),
+                                      record_key_arg = "record_key",
+                                      ptable = ptable_10_5))
+})
+
 
 # -----------------------------------------------------------------------------
 # TESTS: 6. Check perturbed table content matches expected output
@@ -164,7 +186,8 @@ test_that("Perturbed table has expected counts", {
   # Load expected_result from rda file, and sort data for comparison
   load(file = "perturbed_table_var1_var5_var8.rda")
   grouping_cols <- c("var1","var5","var8")
-  expected_result[,(grouping_cols):=lapply(.SD,as.character),.SDcols=grouping_cols]
+  expected_result[,(grouping_cols):=lapply(.SD,as.character),
+                  .SDcols=grouping_cols]
   setorderv(expected_result,grouping_cols)
   setorderv(result,grouping_cols)
 
@@ -181,7 +204,7 @@ test_that("Perturbed table has expected counts", {
 # TESTS: 7. Check function works when only 1 grouping variable specified
 # -----------------------------------------------------------------------------
 
-test_that("create_perturbed_table function works when only 1 grouping variable specified", {
+test_that("create_perturbed_table works when only 1 grouping variable", {
 
   result <- create_perturbed_table(data = micro,
                                    geog = NULL,

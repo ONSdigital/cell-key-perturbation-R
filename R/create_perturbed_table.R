@@ -1,5 +1,3 @@
-library(data.table)
-
 #' Create a frequency table with cell key perturbation applied
 #'
 #' 'create_perturbed_table()' creates a frequency table which has had
@@ -41,7 +39,7 @@ library(data.table)
 #'                                          ptable = ptable_10_5)
 #'
 #' @export
-create_perturbed_table=function(data,geog,tab_vars,record_key_arg,ptable)
+create_perturbed_table <- function(data,geog,tab_vars,record_key_arg,ptable)
 {
 
   # Type validation on input data & ptable
@@ -54,7 +52,7 @@ create_perturbed_table=function(data,geog,tab_vars,record_key_arg,ptable)
 
   # Check that at least one variable specified for geog or tab_vars
   if (length(geog)==0 & length(tab_vars)==0)  {
-    stop("No variables have been specified for tabulation. Please specify a value for geog or tab_vars.")
+    stop("No variables for tabulation. Specify value for geog or tab_vars.")
   }
 
   # Check that variable specified for record_key_arg
@@ -62,7 +60,7 @@ create_perturbed_table=function(data,geog,tab_vars,record_key_arg,ptable)
     stop("Please specify a value for record_key_arg.")
   }
 
-  # Check geog, tab_vars & record_key_arg specified are contained within 'data'
+  # Check geog, tab_vars & record_key_arg specified are contained within data
   if (length(geog)>0){
     if (!(geog %in% colnames(data))){
       stop("Specified value for geog must be a column name in data.")
@@ -78,8 +76,9 @@ create_perturbed_table=function(data,geog,tab_vars,record_key_arg,ptable)
   }
 
   # Check ptable has correct format
+  msg <- "Supplied ptable must contain columns named 'pcv','ckey' and 'pvalue'"
   if (!all(c("pcv","ckey","pvalue") %in% colnames(ptable))){
-    stop("Supplied ptable must contain columns called 'pcv','ckey' and 'pvalue'")
+    stop(msg)
   }
 
   # Bind variables locally to function to prevent
@@ -87,16 +86,18 @@ create_perturbed_table=function(data,geog,tab_vars,record_key_arg,ptable)
   pre_sdc_count <- pcv <- count <- pvalue <- ckey <- NULL
 
   #drop unnecessary columns
-  data=data[,c(geog,tab_vars,record_key_arg),with=FALSE]
+  data <- data[,c(geog,tab_vars,record_key_arg),with=FALSE]
 
   #convert every column to factor, except record_key
   cols <- colnames(data)[!(colnames(data) %in% record_key_arg)]
   data[,(cols):=lapply(.SD,as.factor),.SDcols=cols]
 
-  #tabulate
-  #using 'table' function to get zero cells
-  aggregated_table<-as.data.table(table(data[,c(geog,tab_vars),with=FALSE]))
-  colnames(aggregated_table)[colnames(aggregated_table) == "N"] <- "pre_sdc_count"
+  #tabulate - using 'table' function to get zero cells
+  aggregated_table <- as.data.table(table(data[,c(geog,tab_vars),
+                                               with=FALSE]))
+  colnames(aggregated_table)[colnames(aggregated_table) == "N"] <-
+    "pre_sdc_count"
+
   # Fix: If only 1 variable specified, column is named V1.
   # Rename to original column name to prevent later merge failing.
   if (length(cols) == 1) {
@@ -105,25 +106,31 @@ create_perturbed_table=function(data,geog,tab_vars,record_key_arg,ptable)
 
   #adjust for using cellkeys of 256 or other (e.g. 4095)
   max_ckey<-max(ptable$ckey)
-  #checking the range of ckeys used in the ptable matches the range of rkeys in the data
+  #checking range of ckeys used in the ptable matches range in the data
   max_rkey<-max(data[,get(record_key_arg)])
+  msg <- paste0(
+    "The .", '\n',
+    "The maximum record key is ", max_rkey,
+    ", whereas the maximum cell key is ", max_ckey, '\n',
+    "Please check you are using the appropriate ptable for this data.")
   if(max_ckey!=max_rkey){
-    warning(paste0("The ranges of record keys and cell keys appear to be different",'\n',
-                   "The maximum record key is ",max_rkey,", whereas the maximum cell key is ",max_ckey),'\n',
-            "Please check you are using the appropriate ptable for this data")
+    warning(msg)
   }
 
   #calculate cell keys
-  cellkeys<-setDT(data)[,list(ckey = sum(get(record_key_arg))%%(max_ckey+1)), keyby = c(geog,tab_vars)]
-  aggregated_table<-merge(aggregated_table,cellkeys,by=c(geog,tab_vars),all.x=TRUE)
-
+  cellkeys<-setDT(data)[,list(ckey = sum(get(record_key_arg))%%(max_ckey+1)),
+                        keyby = c(geog,tab_vars)]
+  aggregated_table<-merge(aggregated_table,cellkeys,by=c(geog,tab_vars),
+                          all.x=TRUE)
 
   #calculate pcv
-  aggregated_table$pcv<-as.integer(((aggregated_table$pre_sdc_count-1)%%250)+501)
+  aggregated_table$pcv <-
+    as.integer(((aggregated_table$pre_sdc_count-1)%%250)+501)
   setDT(aggregated_table)[pre_sdc_count<=750, pcv:=pre_sdc_count,]
 
   #merge on ptable
-  aggregated_table<-merge(aggregated_table,ptable,by=c("ckey","pcv"),sort=FALSE,all.x=TRUE)
+  aggregated_table<-merge(aggregated_table,ptable,by=c("ckey","pcv"),
+                          sort=FALSE,all.x=TRUE)
   setDT(aggregated_table)[,count:=pre_sdc_count+pvalue,]
 
   #replacing NAs in cellkey for zero cells
@@ -137,5 +144,6 @@ create_perturbed_table=function(data,geog,tab_vars,record_key_arg,ptable)
 
   return(aggregated_table)
 }
+
 
 
