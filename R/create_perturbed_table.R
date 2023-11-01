@@ -98,7 +98,7 @@ create_perturbed_table <- function(data,geog,tab_vars,record_key_arg,ptable)
   colnames(aggregated_table)[colnames(aggregated_table) == "N"] <-
     "pre_sdc_count"
 
-  # Fix: If only 1 variable specified, column is named V1.
+  # Fix implemented: If only 1 variable specified, column is named V1.
   # Rename to original column name to prevent later merge failing.
   if (length(cols) == 1) {
     colnames(aggregated_table)[colnames(aggregated_table) == "V1"] <- cols

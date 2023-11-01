@@ -27,7 +27,7 @@ You can install the development version of cellkeyperturbation from
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("ONSdigital/cell-key-perturbation-R")
+devtools::install_github("ONSdigital/cell-key-perturbation-R", build_vignettes = TRUE)
 ```
 
 ## Example
@@ -49,4 +49,12 @@ perturbed_table <-create_perturbed_table(data = micro,
                                          geog = c("var1"),
                                          tab_vars = c("var5","var8"),
                                          ptable = ptable_10_5)
+```
+
+## Help
+
+Links to the User Guide and Help Pages can be accessed using:
+
+``` r
+help(package="cellkeyperturbation")
 ```
