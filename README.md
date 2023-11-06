@@ -53,7 +53,8 @@ perturbed_table <-create_perturbed_table(data = micro,
 
 ## Help
 
-Links to the User Guide and Help Pages can be accessed using:
+Links to the Help Pages and User Guide (Introduction to
+cellkeyperturbation) can be accessed using:
 
 ``` r
 help(package="cellkeyperturbation")
