@@ -1,6 +1,6 @@
 Package: cellkeyperturbation
 Title: R implementation of cell key perturbation
-Version: 0.0.0.9000
+Version: 1.0.0
 Authors@R: 
     person("Iain", "Dove", , "SMLHelp@ons.gov.uk", role = c("aut", "cre"))
 Description: R implementation of cell key perturbation developed at the
