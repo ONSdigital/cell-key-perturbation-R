@@ -5,8 +5,8 @@
 
  | Descriptive      | Details                         |
  |:---              | :----                           |
- | Method name      |Cell key perturbation            | 
- | Method theme     |Statistical disclosure control   |
+ | Method name      |Cell Key Perturbation            | 
+ | Method theme     |Statistical Disclosure Control   |
  | Expert group     |Statistical Disclosure Control   |
  | Languages        |R                           |
  | Release          |1.0                              |
