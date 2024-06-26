@@ -34,6 +34,7 @@ always perturbed in the same way.
 
 ### Terminology
 
+- Microdata - data at the level of individual respondents
 - Record key - A random number assigned to each record 
 - Cell value - The number of records or frequency for a cell
 - Cell key - The sum of record keys for a given cell
