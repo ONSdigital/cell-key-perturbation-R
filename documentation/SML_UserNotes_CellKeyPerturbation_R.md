@@ -46,16 +46,17 @@ determines which cells get perturbed and by how much.
 
 ### Statistical Process Flow / Formal Definition
 
-Cell key perturbation requires that the data to be aggregated contain a column 
-for 'record key'. Previously, record keys between 0-255 have been used (as for 
-census-2021). The method has been extended to also handle record keys in the 
-range 0-4096 for purpose of processing administrative data. 
-Record keys are random, uniformly distributed integers within the chosen range.
+The user is required to supply microdata and to specify which columns in the data they 
+want to tabulate by. They must also supply a ptable which will determine which cells 
+get perturbed and by how much.
 
-The method requires microdata, a ptable file, and the variables to be 
-tabulated to be specified. It is expected that users will tabulate 1-4 
-variables for a particular geography level e.g. tabulate age by gender at local 
-authority level. 
+The microdata needs to contain a column for 'record key'. Record keys are random, 
+uniformly distributed integers within the chosen range. Previously, record keys between 
+0-255 have been used (as for census-2021). The method has been extended to also handle 
+record keys in the range 0-4096 for the purpose of processing administrative data. 
+
+It is expected that users will tabulate 1-4 variables for a particular geography 
+level e.g. tabulate age by gender at local authority level. 
 
 The create_perturbed_table function counts how many rows in the data
 contain each combination of categories e.g. how many respondents are of
