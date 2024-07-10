@@ -57,7 +57,7 @@ uniformly distributed integers within the chosen range. Previously, record keys 
 record keys in the range 0-4096 for the purpose of processing administrative data. 
 
 It is expected that users will tabulate 1-4 variables for a particular geography 
-level e.g. tabulate age by gender at local authority level. 
+level e.g. tabulate age by sex at local authority level. 
 
 The create_perturbed_table function counts how many rows in the data
 contain each combination of categories e.g. how many respondents are of
