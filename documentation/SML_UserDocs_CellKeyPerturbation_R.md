@@ -119,14 +119,14 @@ This method requires R version 2.10 or higher and uses the data.table package.
 The method package can be installed from GitHub using the following code in 
 the RStudio terminal:
 
-```
+```r
 # install.packages("devtools")
 devtools::install_github("ONSdigital/cell-key-perturbation-R", build_vignettes = TRUE)
 ```
 
 In your code you can load the cell key perturbation package using:
 
-```
+```r
 library(cellkeyperturbation)
 ```
 
@@ -261,7 +261,7 @@ range 0-255
 
 These can be viewed using:
 
-```
+```r
 # library(cellkeyperturbation)
 micro
 ptable_10_5
@@ -270,13 +270,13 @@ ptable_10_5
 ## Worked Example
 
 1.  Install the cell key perturbation package.
-```
+```r
 # install.packages("devtools")
 devtools::install_github("ONSdigital/cell-key-perturbation-R")
 ```
 
 2.  Load the package.
-```
+```r
 library(cellkeyperturbation)
 ```
 
@@ -284,7 +284,7 @@ library(cellkeyperturbation)
 ptable (ptable_10_5), specifying the record_key, geog and tab_vars as
 columns in micro.
 
-```
+```r
 perturbed_table <- create_perturbed_table(data = micro,
                                          record_key_arg = "record_key",
                                          geog = c("var1"),
@@ -297,7 +297,7 @@ each ready to pass to the method in the form of a data.table. These can be
 read in from csv files using data.table's fast read function, 'fread'. 
 For example:
 
-```
+```r
 library(data.table)
 input_microdata <- fread("input_microdata.csv")
 
@@ -322,7 +322,7 @@ blank an error message will be returned and the method will not work.
 The resulting frequency table and counts can be saved to a csv file using 
 data.table's fast write function. For example:
 
-```
+```r
 perturbed_table[,':='(ckey=NULL, pcv=NULL, pre_sdc_count=NULL, pvalue=NULL)]
 fwrite(perturbed_table,"perturbed_table.csv")
 ```
@@ -354,7 +354,7 @@ of 10 and rounding to base 5
 These can be viewed by selecting the cellkeyperturbation package name in the 
 packages tab of RStudio or using: 
 
-```
+```r
 help(package=cellkeyperturbation)
 
 vignette("intro_to_cellkeyperturbation")
