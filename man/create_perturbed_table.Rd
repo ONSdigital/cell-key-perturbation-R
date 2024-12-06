@@ -4,28 +4,38 @@
 \alias{create_perturbed_table}
 \title{Create a frequency table with cell key perturbation applied}
 \usage{
-create_perturbed_table(data, geog, tab_vars, record_key_arg, ptable)
+create_perturbed_table(
+  data,
+  geog,
+  tab_vars,
+  record_key,
+  ptable,
+  threshold = 10
+)
 }
 \arguments{
-\item{data}{A data.table containing the data to be tabulated and
-perturbed}
+\item{data}{A data.table containing the data to be tabulated and perturbed}
 
-\item{geog}{A string vector giving the column name in 'data' that
-contains the desired geography level for the frequency table. This can be
-the empty vector, c(), if no geography level is required.}
+\item{geog}{A string vector giving the column name in 'data' that contains
+the desired geography level for the frequency table. This can be the empty
+vector, c(), if no geography level is required.}
 
-\item{tab_vars}{A string vector giving the column names in 'data' of
-the variables to be tabulated.}
+\item{tab_vars}{A string vector giving the column names in 'data' of the
+variables to be tabulated. This can be the empty vector, c(), provided
+a geography level is supplied.}
 
-\item{record_key_arg}{A String containing the column name in 'data'
-giving the record keys required for perturbation.}
+\item{record_key}{A String containing the column name in 'data' giving
+the record keys required for perturbation.}
 
 \item{ptable}{A data.table containing the 'ptable' file which determines
 when perturbation is applied.}
+
+\item{threshold}{An integer specifying the value below which counts are
+suppressed, with a default value of 10.}
 }
 \value{
-Returns a data.table giving a frequency table which has had cell key
-perturbation applied according to the ptable supplied.
+Returns a data.table giving a frequency table which has had
+cell key perturbation applied according to the ptable supplied.
 }
 \description{
 'create_perturbed_table()' creates a frequency table which has had
@@ -44,9 +54,10 @@ perturbed_table <-
  create_perturbed_table(micro, geog, tab_vars, record_key, ptable_10_5)
 
 perturbed_table <-create_perturbed_table(data = micro,
-                                         record_key_arg = "record_key",
+                                         record_key = "record_key",
                                          geog = c(),
                                          tab_vars = c("var1","var5","var8"),
-                                         ptable = ptable_10_5)
+                                         ptable = ptable_10_5,
+                                         threshold = 10)
 
 }

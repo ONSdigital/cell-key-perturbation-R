@@ -4,8 +4,8 @@
 # Test
 # - 1. type validation on input data & ptable
 # - 2. variables have been supplied for tabulation
-# - 3. record_key_arg has been specified
-# - 4. geog, tab_vars & record_key_arg specified are contained within data
+# - 3. record_key has been specified
+# - 4. geog, tab_vars & record_key specified are contained within data
 # - 5. ptable has correct format
 # - 6. perturbed table content matches expected output for specific example
 # - 7. function works when only 1 grouping variable is specified
@@ -24,7 +24,7 @@ test_that("error raised if input data NOT a data.table", {
   expect_error(create_perturbed_table(data = "not_a_data_table",
                                       geog = c("var1"),
                                       tab_vars = c("var5","var8"),
-                                      record_key_arg = "record_key",
+                                      record_key = "record_key",
                                       ptable = ptable_10_5),
         "Specified value for data must be a data.table", fixed = TRUE)
 })
@@ -33,7 +33,7 @@ test_that("error raised if ptable supplied NOT a data.table", {
   expect_error(create_perturbed_table(data = micro,
                                       geog = c("var1"),
                                       tab_vars = c("var5","var8"),
-                                      record_key_arg = "record_key",
+                                      record_key = "record_key",
                                       ptable = "not_a_data_table"),
         "Specified value for ptable must be a data.table", fixed = TRUE)
 })
@@ -46,7 +46,7 @@ test_that("error raised if geog & tab_vars are both NULL.", {
   expect_error(create_perturbed_table(data = micro,
                                       geog = NULL,
                                       tab_vars = NULL,
-                                      record_key_arg = "record_key",
+                                      record_key = "record_key",
                                       ptable = ptable_10_5),
   "No variables for tabulation. Specify value for geog or tab_vars.",
   fixed = TRUE)
@@ -56,35 +56,44 @@ test_that("error raised if both geog & tab_vars are empty.", {
   expect_error(create_perturbed_table(data = micro,
                                       geog = c(),
                                       tab_vars = c(),
-                                      record_key_arg = "record_key",
+                                      record_key = "record_key",
                                       ptable = ptable_10_5),
   "No variables for tabulation. Specify value for geog or tab_vars.",
   fixed = TRUE)
 })
 
 # -----------------------------------------------------------------------------
-# TESTS:3 Check Check error raised if record_key_arg not specified
+# TESTS:3 Check error raised if record_key not specified as character
 # -----------------------------------------------------------------------------
 
-test_that("error raised if record_key_arg not specified", {
+test_that("error raised if record_key not specified", {
   expect_error(create_perturbed_table(data = micro,
                                       geog = c("var1"),
                                       tab_vars = c("var5","var8"),
-                                      record_key_arg = NULL,
+                                      record_key = 3,
                                       ptable = ptable_10_5),
-               "Please specify a value for record_key_arg.",
+               "Specified value for record_key must be a string.",
+               fixed = TRUE)
+})
+test_that("error raised if record_key not specified", {
+  expect_error(create_perturbed_table(data = micro,
+                                      geog = c("var1"),
+                                      tab_vars = c("var5","var8"),
+                                      record_key = c("var2","var3"),
+                                      ptable = ptable_10_5),
+               "Specified value for record_key must be a string.",
                fixed = TRUE)
 })
 
 # -----------------------------------------------------------------------------
-# TESTS:4 Check errors raised if geog, tab_vars & record_key_arg not within data
+# TESTS:4 Check errors raised if geog, tab_vars & record_key not within data
 # -----------------------------------------------------------------------------
 
 test_that("error raised if geog not a column within data", {
   expect_error(create_perturbed_table(data = micro,
                                       geog = c("not_col_in_data"),
                                       tab_vars = c("var5","var8"),
-                                      record_key_arg = "record_key",
+                                      record_key = "record_key",
                                       ptable = ptable_10_5),
         "Specified value for geog must be a column name in data.",
         fixed = TRUE)
@@ -94,19 +103,19 @@ test_that("error raised if tab_vars not columns within data", {
   expect_error(create_perturbed_table(data = micro,
                                       geog = c("var1"),
                                       tab_vars = c("not_col_in_data","var8"),
-                                      record_key_arg = "record_key",
+                                      record_key = "record_key",
                                       ptable = ptable_10_5),
         "Specified values for tab_vars must be column names in data.",
         fixed = TRUE)
 })
 
-test_that("error raised if record_key_arg not a column within data", {
+test_that("error raised if record_key not a column within data", {
   expect_error(create_perturbed_table(data = micro,
                                       geog = c("var1"),
                                       tab_vars = c("var5","var8"),
-                                      record_key_arg = "not_record_key",
+                                      record_key = "not_record_key",
                                       ptable = ptable_10_5),
-          "Specified value for record_key_arg must be a column name in data.",
+          "Specified value for record_key must be a column name in data.",
           fixed = TRUE)
 })
 
@@ -124,7 +133,7 @@ test_that("error raised if ptable does not contain required column names", {
   expect_error(create_perturbed_table(data = micro,
                                       geog = c("var1"),
                                       tab_vars = c("var5","var8"),
-                                      record_key_arg = "record_key",
+                                      record_key = "record_key",
                                       ptable = dodgy_ptable),
         "Supplied ptable must contain columns named 'pcv','ckey' and 'pvalue'",
         fixed = TRUE)
@@ -147,13 +156,83 @@ test_that("warning if max record key and max cell key are different", {
   expect_warning(create_perturbed_table(data = dodgy_data,
                                       geog = c("var1"),
                                       tab_vars = c("var2"),
-                                      record_key_arg = "record_key",
+                                      record_key = "record_key",
                                       ptable = ptable_10_5))
 })
 
+# -----------------------------------------------------------------------------
+# TESTS: 7. Check function works when only 1 grouping variable specified
+# -----------------------------------------------------------------------------
+
+test_that("create_perturbed_table works when only 1 grouping variable", {
+
+  result <- create_perturbed_table(data = micro,
+                                   geog = NULL,
+                                   tab_vars = c("var5"),
+                                   record_key = "record_key",
+                                   ptable = ptable_10_5,
+                                   threshold=0)
+  expect_equal(nrow(result),10) # var5 values 1-10
+
+
+  result <- create_perturbed_table(data = micro,
+                                   geog = c("var1"),
+                                   tab_vars = NULL,
+                                   record_key = "record_key",
+                                   ptable = ptable_10_5,
+                                   threshold=0)
+  expect_equal(nrow(result),5) # var1 values 1-5
+
+})
 
 # -----------------------------------------------------------------------------
-# TESTS: 6. Check perturbed table content matches expected output
+# TESTS: 8. Check Error/Warning if record keys missing
+# -----------------------------------------------------------------------------
+
+micro_test = copy(micro)            # take explicit copy to ensure micro unchanged
+micro_test[1000,"record_key":=255]  # make sure max record key not deleted
+
+message_string <- "Less than 50% of records have a record key.
+    Cell key perturbation will be much less effective with fewer record keys,
+    so this code requires at least 50% of records to have a record key."
+
+micro_test[1:501,"record_key":=NaN]  # Set more than half record keys to missing
+test_that("error raised if more then 50% record keys missing", {
+  expect_error(create_perturbed_table(data = micro_test,
+                                      geog = c("var1"),
+                                      tab_vars = c("var5","var8"),
+                                      record_key = "record_key",
+                                      ptable = ptable_10_5),
+               message_string,
+               fixed = TRUE)
+})
+
+micro_test[,"record_key":=NaN]  # Set all record keys to missing
+test_that("error raised if more then 50% record keys missing", {
+    expect_error(create_perturbed_table(data = micro_test,
+                                        geog = c("var1"),
+                                        tab_vars = c("var5","var8"),
+                                        record_key = "record_key",
+                                        ptable = ptable_10_5),
+                 message_string,
+                 fixed = TRUE)
+})
+
+micro_test = copy(micro)
+micro_test[1:5,"record_key":=NaN]  # Set 5 record keys to missing
+test_that("warning if less than 50% record keys missing" , {
+  expect_warning(create_perturbed_table(data = micro_test,
+                                        geog = c("var1"),
+                                        tab_vars = c("var2"),
+                                        record_key = "record_key",
+                                        ptable = ptable_10_5))
+})
+
+rm(micro_test)
+
+
+# -----------------------------------------------------------------------------
+# TESTS: 9. Check perturbed table content matches expected output
 # -----------------------------------------------------------------------------
 
 # Create perturbed table for micro data using geog=var1 & tab_vars=var5,var8
@@ -164,8 +243,9 @@ test_that("Perturbed table includes zero count combinations", {
   result <- create_perturbed_table(data = micro,
                                    geog = c("var1"),
                                    tab_vars = c("var5","var8"),
-                                   record_key_arg = "record_key",
-                                   ptable = ptable_10_5)
+                                   record_key = "record_key",
+                                   ptable = ptable_10_5,
+                                   threshold=0)
 
   expect_equal(nrow(result),200)
 })
@@ -179,8 +259,9 @@ test_that("Perturbed table has expected counts", {
   result <- create_perturbed_table(data = micro,
                                    geog = c("var1"),
                                    tab_vars = c("var5","var8"),
-                                   record_key_arg = "record_key",
-                                   ptable = ptable_10_5)
+                                   record_key = "record_key",
+                                   ptable = ptable_10_5,
+                                   threshold=0)
 
 
   # Load expected_result from rda file, and sort data for comparison
@@ -197,29 +278,38 @@ test_that("Perturbed table has expected counts", {
   expect_identical(result$pre_sdc_count,expected_result$pre_sdc_count)
   expect_identical(result$pvalue,expected_result$pvalue)
   expect_identical(result$count,expected_result$count)
-
 })
 
 # -----------------------------------------------------------------------------
-# TESTS: 7. Check function works when only 1 grouping variable specified
+# TESTS: 10. Check threshold is applied
 # -----------------------------------------------------------------------------
 
-test_that("create_perturbed_table works when only 1 grouping variable", {
-
-  result <- create_perturbed_table(data = micro,
-                                   geog = NULL,
-                                   tab_vars = c("var5"),
-                                   record_key_arg = "record_key",
-                                   ptable = ptable_10_5)
-  expect_equal(nrow(result),10) # var5 values 1-10
-
+# Create perturbed table for micro data using geog=var1 & tab_vars=var5,var8
+# without specifying value for threshold, check default is applied
+test_that("Default threshold is applied", {
 
   result <- create_perturbed_table(data = micro,
                                    geog = c("var1"),
-                                   tab_vars = NULL,
-                                   record_key_arg = "record_key",
+                                   tab_vars = c("var5","var8"),
+                                   record_key = "record_key",
                                    ptable = ptable_10_5)
-  expect_equal(nrow(result),5) # var1 values 1-5
 
+  expect_true(sum(is.na(result$count))>0)
 })
+
+# Create perturbed table for micro data using geog=var1 & tab_vars=var5,var8
+# specifying non-integer for threshold, check default is applied
+message_string <- "Specified value for threshold must be an integer"
+
+test_that("Error if threshold not integer", {
+  expect_error(create_perturbed_table(data = micro,
+                                      geog = c("var1"),
+                                      tab_vars = c("var5","var8"),
+                                      record_key = "record_key",
+                                      ptable = ptable_10_5,
+                                      threshold = 3.5),
+             message_string,
+             fixed = TRUE)
+})
+
 
