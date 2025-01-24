@@ -48,7 +48,8 @@ perturbed_table <-create_perturbed_table(data = micro,
                                          record_key_arg = "record_key",
                                          geog = c("var1"),
                                          tab_vars = c("var5","var8"),
-                                         ptable = ptable_10_5)
+                                         ptable = ptable_10_5,
+                                         threshold = 10)
 ```
 
 ## Help
