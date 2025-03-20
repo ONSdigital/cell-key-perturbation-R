@@ -22,8 +22,7 @@ table.
 
 ## Installation
 
-You can install the development version of cellkeyperturbation from
-[GitHub](https://github.com/) with:
+You can install cellkeyperturbation from [GitHub](https://github.com/ONSdigital/cell-key-perturbation-R) with:
 
 ``` r
 # install.packages("devtools")
