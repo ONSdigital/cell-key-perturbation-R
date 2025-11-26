@@ -7,8 +7,11 @@
 # - 3. record_key has been specified
 # - 4. geog, tab_vars & record_key specified are contained within data
 # - 5. ptable has correct format
-# - 6. perturbed table content matches expected output for specific example
-# - 7. function works when only 1 grouping variable is specified
+# - 6. record key range in data and cell key range in ptable match
+# - 7. function works when only 1 grouping variable specified
+# - 8. validation for missing record keys
+# - 9. perturbed table content matches expected output for specific example
+# - 10. Check threshold is applied
 #
 # TEST DATA:
 # perturbed_table_var1_var5_var8.rds - expected output for perturbation on
@@ -171,7 +174,7 @@ test_that("create_perturbed_table works when only 1 grouping variable", {
                                    tab_vars = c("var5"),
                                    record_key = "record_key",
                                    ptable = ptable_10_5,
-                                   threshold=0)
+                                   threshold=10)
   expect_equal(nrow(result),10) # var5 values 1-10
 
 
@@ -180,7 +183,7 @@ test_that("create_perturbed_table works when only 1 grouping variable", {
                                    tab_vars = NULL,
                                    record_key = "record_key",
                                    ptable = ptable_10_5,
-                                   threshold=0)
+                                   threshold=10)
   expect_equal(nrow(result),5) # var1 values 1-5
 
 })
@@ -245,7 +248,7 @@ test_that("Perturbed table includes zero count combinations", {
                                    tab_vars = c("var5","var8"),
                                    record_key = "record_key",
                                    ptable = ptable_10_5,
-                                   threshold=0)
+                                   threshold=10)
 
   expect_equal(nrow(result),200)
 })
@@ -261,7 +264,7 @@ test_that("Perturbed table has expected counts", {
                                    tab_vars = c("var5","var8"),
                                    record_key = "record_key",
                                    ptable = ptable_10_5,
-                                   threshold=0)
+                                   threshold=10)
 
 
   # Load expected_result from rda file, and sort data for comparison
