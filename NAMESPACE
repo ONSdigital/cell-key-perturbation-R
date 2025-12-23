@@ -2,5 +2,6 @@
 
 export(create_perturbed_table)
 export(generate_ptable_10_5_rule)
+export(generate_random_rkey)
 export(generate_test_data)
 import(data.table)
