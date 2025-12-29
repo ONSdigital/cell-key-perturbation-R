@@ -6,39 +6,42 @@
 \usage{
 create_perturbed_table(
   data,
+  ptable,
   geog,
   tab_vars,
   record_key,
-  ptable,
   threshold = 10
 )
 }
 \arguments{
-\item{data}{A data.table containing the data to be tabulated and perturbed}
+\item{data}{A \code{data.table} containing the data to be tabulated and perturbed
 
-\item{geog}{A string vector giving the column name in 'data' that contains
-the desired geography level for the frequency table. This can be the empty
-vector, c(), if no geography level is required.}
+The data should contain one row per statistical unit (person, household,
+business or other) and one column per variable (age, sex, health status)}
 
-\item{tab_vars}{A string vector giving the column names in 'data' of the
-variables to be tabulated. This can be the empty vector, c(), provided
-a geography level is supplied.}
-
-\item{record_key}{A String containing the column name in 'data' giving
-the record keys required for perturbation.}
-
-\item{ptable}{A data.table containing the 'ptable' file which determines
+\item{ptable}{A \code{data.table} containing the \code{ptable} file which determines
 when perturbation is applied.}
 
-\item{threshold}{An integer specifying the value below which counts are
+\item{geog}{A \verb{character vector} giving the column name in \code{data} that
+contains the desired geography level for the frequency table. This can be an
+empty vector, \code{c()}, if no geography level is required.}
+
+\item{tab_vars}{A \verb{character vector} giving the column names in \code{data} of the
+variables to be tabulated.
+This can be an empty vector, \code{c()}, provided a geography level is supplied.}
+
+\item{record_key}{A \code{character} containing the column name in \code{data} giving
+the record keys required for perturbation.}
+
+\item{threshold}{An \code{integer} specifying the value below which counts are
 suppressed, with a default value of 10.}
 }
 \value{
-Returns a data.table giving a frequency table which has had
+Returns a \code{data.table} giving a frequency table which has had
 cell key perturbation applied according to the ptable supplied.
 }
 \description{
-'create_perturbed_table()' creates a frequency table which has had
+\code{create_perturbed_table()} creates a frequency table which has had
 cell key perturbation applied to the counts.
 A p-table file needs to be supplied which determines which cells are
 perturbed.
@@ -46,18 +49,21 @@ The data needs to contain a 'record key' variable which along with the
 ptable allows the process to be repeatable and consistent.
 }
 \examples{
-geog <- c("var1")
+geog <- "var1"
 tab_vars <- c("var5","var8")
-record_key <-"record_key"
+record_key <- "record_key"
+perturbed_table <- create_perturbed_table(micro,
+                                          ptable_10_5,
+                                          geog,
+                                          tab_vars,
+                                          record_key)
 
-perturbed_table <-
- create_perturbed_table(micro, geog, tab_vars, record_key, ptable_10_5)
-
-perturbed_table <-create_perturbed_table(data = micro,
-                                         record_key = "record_key",
-                                         geog = c(),
-                                         tab_vars = c("var1","var5","var8"),
-                                         ptable = ptable_10_5,
-                                         threshold = 10)
+# Alternatively
+perturbed_table <- create_perturbed_table(data = micro,
+                                          ptable = ptable_10_5,
+                                          record_key = "record_key",
+                                          geog = c(),
+                                          tab_vars = c("var1","var5","var8"),
+                                          threshold = 10)
 
 }

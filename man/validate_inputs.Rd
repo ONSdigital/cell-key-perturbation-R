@@ -7,23 +7,26 @@
 validate_inputs(data, ptable, geog, tab_vars, record_key, threshold)
 }
 \arguments{
-\item{data}{A data.table containing the data to be tabulated and perturbed}
+\item{data}{A \code{data.table} containing the data to be tabulated and perturbed
 
-\item{ptable}{A data.table containing the 'ptable' file which determines
+The data should contain one row per statistical unit (person, household,
+business or other) and one column per variable (age, sex, health status)}
+
+\item{ptable}{A \code{data.table} containing the \code{ptable} file which determines
 when perturbation is applied.}
 
-\item{geog}{A string vector giving the column name in 'data' that contains
-the desired geography level for the frequency table. This can be the empty
-vector, c(), if no geography level is required.}
+\item{geog}{A \verb{character vector} giving the column name in \code{data} that
+contains the desired geography level for the frequency table. This can be an
+empty vector, \code{c()}, if no geography level is required.}
 
-\item{tab_vars}{A string vector giving the column names in 'data' of the
-variables to be tabulated. This can be the empty vector, c(), provided
-a geography level is supplied.}
+\item{tab_vars}{A \verb{character vector} giving the column names in \code{data} of the
+variables to be tabulated.
+This can be an empty vector, \code{c()}, provided a geography level is supplied.}
 
-\item{record_key}{A String containing the column name in 'data' giving
+\item{record_key}{A \code{character} containing the column name in \code{data} giving
 the record keys required for perturbation.}
 
-\item{threshold}{An integer specifying the value below which counts are
+\item{threshold}{An \code{integer} specifying the value below which counts are
 suppressed, with a default value of 10.}
 }
 \value{
