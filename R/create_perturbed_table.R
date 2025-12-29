@@ -50,90 +50,12 @@ create_perturbed_table <- function(
     ptable,
     threshold = 10)
 {
+  # Step 0: Validate Inputs
+  validate_inputs(data, ptable, geog, tab_vars, record_key, threshold)
 
+  # ============================================================================
   # Rename record_key in case 'record_key' is a column name in the data
   record_key_arg <- record_key
-
-  # Input checks ===============================================================
-  # 1. Type validation on input data & ptable
-  # 2. Check that at least one variable specified for geog or tab_vars
-  # 3. Check variable is specified for record_key
-  # 4. Check geog, tab_vars & record_key specified are columns in data
-  # 5. Check ptable contains required columns
-  # 6. Check threshold is an integer
-  # ----------------------------------------------------------------------------
-  if (!is.data.table(data)) {
-    stop("Specified value for data must be a data.table.")
-  }
-  if (!is.data.table(ptable)) {
-    stop("Specified value for ptable must be a data.table.")
-  }
-  if (!is.character(record_key_arg) | length(record_key_arg)>1) {
-    stop("Specified value for record_key must be a string.")
-  }
-  if (length(geog)==0 & length(tab_vars)==0)  {
-    stop("No variables for tabulation. Specify value for geog or tab_vars.")
-  }
-  if (length(geog)>0){
-    if (!(geog %in% colnames(data))){
-      stop("Specified value for geog must be a column name in data.")
-    }
-  }
-  if (length(tab_vars)>0){
-    if (!all(tab_vars %in% colnames(data))){
-      stop("Specified values for tab_vars must be column names in data.")
-    }
-  }
-  if (!(record_key_arg %in% colnames(data))){
-    stop("Specified value for record_key must be a column name in data.")
-  }
-  msg <- "Supplied ptable must contain columns named 'pcv','ckey' and 'pvalue'."
-  if (!all(c("pcv","ckey","pvalue") %in% colnames(ptable))){
-    stop(msg)
-  }
-  if ((!is.numeric(threshold) | !(round(threshold)==threshold))){
-    stop("Specified value for threshold must be an integer")
-  }
-  if (threshold <0){
-    warning("Specified value for threshold is negative, meaning no threshold will be applied.")
-  }
-  # ----------------------------------------------------------------------------
-  # Check data has sufficient % records with record keys to apply perturbation
-  rkey_na_count <- sum(is.na(data[,get(record_key_arg)]))
-  rkey_percent <- 100*(1 - rkey_na_count/nrow(data))
-
-  if (rkey_percent < 50){
-    message_string <- "Less than 50% of records have a record key.
-    Cell key perturbation will be much less effective with fewer record keys,
-    so this code requires at least 50% of records to have a record key."
-    stop(message_string)
-  }
-  else if (rkey_percent < 100){
-    if (rkey_percent < 99.94){
-      warning_string1 <- paste("Only",round(rkey_percent,1),
-                              "% of records have a record key.")
-    }
-    if (rkey_na_count == 1){
-      warning_string2 <- "There is 1 record with a missing record key."
-    }
-    else {
-      warning_string2 <- paste("There are",rkey_na_count,
-                                "records with missing record keys.")
-    }
-    warning(cat(warning_string1,warning_string2))
-  }
-  # ----------------------------------------------------------------------------
-  #Check range of ckeys used in the ptable matches range in the data
-  max_ckey<-max(ptable$ckey)
-  max_rkey<-max(data[,get(record_key_arg)], na.rm = TRUE)
-  msg <- paste(
-    "The maximum record key is",max_rkey,", whereas the maximum cell key is ",
-    max_ckey,"Please check you are using the appropriate ptable for this data.")
-  if (max_ckey != max_rkey){
-    warning(msg)
-  }
-  # ============================================================================
-
 
   # Bind variables locally to function to prevent
   # 'No visible binding for global variable' during build check
@@ -158,6 +80,7 @@ create_perturbed_table <- function(
   }
 
   #calculate cell keys
+  max_ckey <- max(ptable$ckey)
   cellkeys<-setDT(data)[,list(ckey = sum(get(record_key_arg))%%(max_ckey+1)),
                         keyby = c(geog,tab_vars)]
   aggregated_table<-merge(aggregated_table,cellkeys,by=c(geog,tab_vars),
