@@ -13,8 +13,11 @@
 #' @export
 generate_ptable_10_5_rule <- function() {
   DT <- CJ(pcv = 1:750, ckey = 0:255, unique = TRUE)
-  DT[, pvalue := as.integer(calculate_pvalue(pcv))]
-  setkey(DT, pcv, ckey)
+
+  pval <- as.integer(calculate_pvalue(DT[["pcv"]]))
+  set(DT, j = "pvalue", value = pval)
+
+  setkeyv(DT, c("pcv", "ckey"))
   return(DT)
 }
 

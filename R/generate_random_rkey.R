@@ -15,6 +15,7 @@
 #' @export
 #'
 #' @examples
+#' library(data.table)
 #' data <- data.table(id = 1:1000)
 #' generate_random_rkey(data)
 generate_random_rkey <- function(data, rkey_range = 255) {
@@ -22,7 +23,7 @@ generate_random_rkey <- function(data, rkey_range = 255) {
 
   set.seed(2025)
 
-  dt[, record_key := sample(0:rkey_range, .N, replace = TRUE)]
+  dt[, ("record_key") := sample(0:rkey_range, .N, replace = TRUE)]
 
   return(dt)
 }

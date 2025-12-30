@@ -19,6 +19,7 @@ A data.table with a new integer column \code{record_key} (values in 0-255)
 tables for testing purposes.
 }
 \examples{
+library(data.table)
 data <- data.table(id = 1:1000)
 generate_random_rkey(data)
 }
