@@ -30,7 +30,8 @@ the record keys required for perturbation.}
 suppressed, with a default value of 10.}
 }
 \value{
-Stop or Warning messages if any validation fails.
+Invisibly returns TRUE on success. Throws stop or Warning messages
+if any validation fails.
 }
 \description{
 Validates inputs for a perturbation process.
@@ -48,7 +49,7 @@ Validates inputs for a perturbation process.
 \item Check ptable contains required columns
 }
 \item Validate the range of record keys and cell keys
-\item Validate data has sufficient \% records with record keys to apply perturbation
+\item Validate data has sufficient records with record keys to apply perturbation
 }
 }
 \examples{
@@ -59,3 +60,4 @@ validate_inputs(data = micro,
                 tab_vars = c("var5","var8"),
                 threshold = 10)
 }
+\keyword{internal}

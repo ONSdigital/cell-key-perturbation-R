@@ -42,9 +42,9 @@
 #' # Alternatively
 #' perturbed_table <- create_perturbed_table(data = micro,
 #'                                           ptable = ptable_10_5,
-#'                                           record_key = "record_key",
 #'                                           geog = c(),
 #'                                           tab_vars = c("var1","var5","var8"),
+#'                                           record_key = "record_key",
 #'                                           threshold = 10)
 #'
 #' @export
