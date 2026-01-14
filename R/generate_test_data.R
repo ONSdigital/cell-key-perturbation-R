@@ -1,6 +1,3 @@
-
-library(data.table)
-
 #' Generate sample microdata
 #'
 #' @description
@@ -14,7 +11,7 @@ library(data.table)
 #'
 #' @import data.table
 #'
-#' @param size Number of rows in the sample microdata
+#' @param size Number of rows in the sample microdata. Default is 1000.
 #' @param rkey_range The max range for record keys. Default is 255.
 #'
 #' @return A data.table containing randomly generated microdata and record keys
@@ -23,7 +20,7 @@ library(data.table)
 #' @examples
 #' data <- generate_test_data(size = 1000)
 #' data <- generate_test_data(size = 1000, rkey_range = 255)
-generate_test_data <- function(size, rkey_range = 255) {
+generate_test_data <- function(size = 1000, rkey_range = 255) {
   set.seed(111)
 
   record_key_sample <- sample(0:rkey_range, size, replace = TRUE)

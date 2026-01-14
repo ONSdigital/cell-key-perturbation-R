@@ -3,6 +3,9 @@
 #' `generate_ptable_10_5_rule()` generates a sample p-table based on 10-5 rule,
 #'  which means a suppression threshold of 10 and rounding to the nearest 5.
 #'
+#' @param max_pcv  Max value for pcv. Default is 750.
+#' @param ckey_range The max range for cell keys. Default is 255.
+#'
 #' @return A data.table assigning a pvalue to each ckey and pcv combination
 #'
 #' @examples
@@ -11,8 +14,8 @@
 #' @import data.table
 #'
 #' @export
-generate_ptable_10_5_rule <- function() {
-  DT <- CJ(pcv = 1:750, ckey = 0:255, unique = TRUE)
+generate_ptable_10_5_rule <- function(max_pcv = 750, ckey_range = 255) {
+  DT <- CJ(pcv = 1:max_pcv, ckey = 0:ckey_range, unique = TRUE)
 
   pval <- as.integer(calculate_pvalue(DT[["pcv"]]))
   set(DT, j = "pvalue", value = pval)
