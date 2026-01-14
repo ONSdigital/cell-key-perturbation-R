@@ -142,8 +142,8 @@ validate_inputs_bigquery <- function(
                           WITH
                             data_range AS (
                               SELECT
-                                MIN(CAST(%s AS INT64)) AS min_rkey,
-                                MAX(CAST(%s AS INT64)) AS max_rkey
+                                MIN(SAFE_CAST(%s AS INT64)) AS min_rkey,
+                                MAX(SAFE_CAST(%s AS INT64)) AS max_rkey
                               FROM `%s`
                             ),
                             ptable_range AS (
