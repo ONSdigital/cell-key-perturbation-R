@@ -42,7 +42,8 @@ Validates inputs for a perturbation process.
 \item Validate other input arguments
 \itemize{
 \item Check that at least one variable specified for geog or tab_vars
-\item Check variable is specified for record_key as a string
+\item Check geog and tab_vars are either character vectors or NULL
+\item Check specified record_key is character vector or NULL
 \item Check threshold is an integer and non-negative
 }
 \item Validate microdata and ptable contain required columns

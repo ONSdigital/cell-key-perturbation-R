@@ -69,22 +69,22 @@ test_that("error raised if both geog & tab_vars are empty.", {
 # TESTS:3 Check error raised if record_key not specified as character
 # -----------------------------------------------------------------------------
 
-test_that("error raised if record_key not specified", {
+test_that("error raised if record_key not specified correctly", {
   expect_error(create_perturbed_table(data = micro,
                                       geog = c("var1"),
                                       tab_vars = c("var5","var8"),
                                       record_key = 3,
                                       ptable = ptable_10_5),
-               "Specified value for record_key must be a string.",
+               "Expected 'record_key' to be character or NULL, but got 'double'!",
                fixed = TRUE)
 })
-test_that("error raised if record_key not specified", {
+test_that("error raised if record_key not specified correctly", {
   expect_error(create_perturbed_table(data = micro,
                                       geog = c("var1"),
                                       tab_vars = c("var5","var8"),
                                       record_key = c("var2","var3"),
                                       ptable = ptable_10_5),
-               "Specified value for record_key must be a string.",
+               "Specified value for record_key must be a single vector.",
                fixed = TRUE)
 })
 

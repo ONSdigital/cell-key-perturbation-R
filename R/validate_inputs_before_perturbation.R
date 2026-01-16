@@ -7,7 +7,8 @@
 #' * Validate type of input data & ptable
 #' * Validate other input arguments
 #'   * Check that at least one variable specified for geog or tab_vars
-#'   * Check variable is specified for record_key as a string
+#'   * Check geog and tab_vars are either character vectors or NULL
+#'   * Check specified record_key is character vector or NULL
 #'   * Check threshold is an integer and non-negative
 #' * Validate microdata and ptable contain required columns
 #'   * Check data contain the specified geog, tab_vars & record_key
@@ -74,7 +75,8 @@ validate_inputs <- function(
 #'
 #' * Validate input arguments
 #'   * Check that at least one variable specified for geog or tab_vars
-#'   * Check variable is specified for record_key as a string
+#'   * Check geog and tab_vars are either character vectors or NULL
+#'   * Check specified record_key is character vector or NULL
 #'   * Check threshold is an integer and non-negative
 #' * Validate microdata and ptable contain required columns
 #'   * Check data contain the specified geog, tab_vars & record_key
@@ -96,6 +98,7 @@ validate_inputs_bigquery <- function(
     geog,
     tab_vars,
     record_key,
+    use_existing_ons_id,
     threshold)
 {
   if (!requireNamespace("DBI", quietly = TRUE)) {
@@ -105,15 +108,26 @@ validate_inputs_bigquery <- function(
     )
   }
 
-  # 1) Check other input arguments
+  data_schema <- DBI::dbGetQuery(con, sprintf("SELECT * FROM `%s` LIMIT 0",
+                                              data))
+  if (use_existing_ons_id && ("ons_id" %in% colnames(data_schema))) {
+    record_key = NULL
+  }
+
+  # 1) Validate input arguments
+  if (!is.character(data) | !is.character(ptable)) {
+    stop("'data' and 'ptable' must be character type,
+         specifying location of tables in BigQuery database!")
+  }
   check_input_arguments(geog, tab_vars, record_key, threshold)
 
-  # 2) Check microdata contains required columns: geog + tab_vars + record_key
+  # 2) Check microdata contains required columns
   required_columns <- c(geog, tab_vars, record_key)
+  existing_columns <- colnames(data_schema)
 
-  data_schema_df <- DBI::dbGetQuery(con, sprintf("SELECT * FROM `%s` LIMIT 0",
-                                                 data))
-  existing_columns <- colnames(data_schema_df)
+  if (use_existing_ons_id && ("ons_id" %in% colnames(data_schema))) {
+    required_columns <- c(geog, tab_vars)
+  }
 
   missing <- setdiff(required_columns, existing_columns)
   if (length(missing) > 0) {
@@ -160,6 +174,12 @@ validate_inputs_bigquery <- function(
                           FROM data_range d, ptable_range p
                          ", record_key, record_key, data, ptable)
 
+  if (use_existing_ons_id && ("ons_id" %in% colnames(data_schema))) {
+    range_query <- gsub(paste0("SAFE_CAST(", record_key, " AS INT64)"),
+                        "MOD(SAFE_CAST(ons_id AS INT64), 4096)",
+                        range_query, fixed = TRUE)
+  }
+
   keys_range <- DBI::dbGetQuery(con, range_query)
 
   min_rkey <- keys_range[["min_rkey"]][1]
@@ -178,6 +198,12 @@ validate_inputs_bigquery <- function(
       ROUND(100.0 * COUNTIF(%s IS NOT NULL) / COUNT(*), 2) AS percent_with_keys
     FROM `%s`
   ", record_key, record_key, data)
+
+  if (use_existing_ons_id && ("ons_id" %in% colnames(data_schema))) {
+    records_key_query <- gsub(paste0("SAFE_CAST(", record_key, " AS INT64)"),
+                              "MOD(SAFE_CAST(ons_id AS INT64), 4096)",
+                              records_key_query, fixed = TRUE)
+  }
 
   rkey <- DBI::dbGetQuery(con, records_key_query)
 
@@ -209,11 +235,26 @@ check_input_arguments <- function(geog, tab_vars, record_key_arg, threshold)
   if (length(geog)==0 & length(tab_vars)==0)  {
     stop("No variables for tabulation. Specify value for geog or tab_vars.")
   }
-  if (length(record_key_arg)==0)  {
-    stop("Please specify a value for record_key.")
+  if (!is.null(geog) && !is.character(geog)) {
+    stop(sprintf(
+      "Expected 'geog' to be character or NULL, but got '%s'!",
+      typeof(geog)
+    ))
   }
-  if (!is.character(record_key_arg) | length(record_key_arg)>1) {
-    stop("Specified value for record_key must be a string.")
+  if (!is.null(tab_vars) && !is.character(tab_vars)) {
+    stop(sprintf(
+      "Expected 'tab_vars' to be character or NULL, but got '%s'!",
+      typeof(tab_vars)
+    ))
+  }
+  if (!is.null(record_key_arg) && !is.character(record_key_arg)) {
+    stop(sprintf(
+      "Expected 'record_key' to be character or NULL, but got '%s'!",
+      typeof(record_key_arg)
+    ))
+  }
+  if (length(record_key_arg)>1) {
+    stop("Specified value for record_key must be a single vector.")
   }
   if ((!is.numeric(threshold) | !(round(threshold)==threshold))){
     stop("Specified value for threshold must be an integer")
@@ -293,7 +334,3 @@ check_missing_record_key <- function(rkey_na_count, rkey_percent)
     warning(cat(warning_string1,warning_string2))
   }
 }
-
-
-
-
