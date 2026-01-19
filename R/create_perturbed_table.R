@@ -21,6 +21,12 @@
 #' This can be an empty vector, `c()`, provided a geography level is supplied.
 #' @param record_key A `character` containing the column name in `data` giving
 #' the record keys required for perturbation.
+#' If data contains "ons_id" and use_existing_ons_id = TRUE,
+#' set (record_key = NULL), as record key will be generated from "ons_id".
+#' @param use_existing_ons_id A `logical` on whether to create record keys
+#' from ons_id, if ons_id exists in data.
+#' It will be irrelevant if microdata does not contain ons_id.
+#' Default is TRUE.
 #' @param threshold An `integer` specifying the value below which counts are
 #' suppressed, with a default value of 10.
 #'
@@ -54,8 +60,19 @@ create_perturbed_table <- function(
     geog,
     tab_vars,
     record_key,
+    use_existing_ons_id = TRUE,
     threshold = 10)
 {
+  # Generate record keys from "ons_id" if exists
+  if (use_existing_ons_id && ("ons_id" %in% colnames(data))) {
+    message('NOTE: "ons_id" column is available in data!',
+            '\nGenerating record keys from "ons_id"!')
+
+    data <- generate_record_key_from_ons_id(data,
+                                            record_key_col = "ons_record_key")
+    record_key <- "ons_record_key"
+  }
+
   # Step 0: Validate Inputs
   validate_inputs(data, ptable, geog, tab_vars, record_key, threshold)
 

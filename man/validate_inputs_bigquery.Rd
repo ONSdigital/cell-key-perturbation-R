@@ -11,6 +11,7 @@ validate_inputs_bigquery(
   geog,
   tab_vars,
   record_key,
+  use_existing_ons_id,
   threshold
 )
 }
@@ -38,7 +39,14 @@ Column names to tabulate, e.g., \code{c("Age", "Health", "Occupation")}.}
 
 \item{record_key}{--\code{character}.
 Column name with record keys required for perturbation,
-e.g., \code{"Record_Key"}.}
+e.g., \code{"Record_Key"}.
+If data contains "ons_id" and use_existing_ons_id = TRUE,
+set (record_key = NULL), as record key will be generated from "ons_id".}
+
+\item{use_existing_ons_id}{-- \code{logical}
+Whether to create record keys from ons_id, if ons_id exists in data.
+It will be irrelevant if microdata does not contain ons_id.
+Default is TRUE.}
 
 \item{threshold}{--\code{integer}.
 Suppression threshold; perturbed counts below this value are suppressed.
@@ -54,7 +62,8 @@ Validates BigQuery inputs for a perturbation process.
 \item Validate input arguments
 \itemize{
 \item Check that at least one variable specified for geog or tab_vars
-\item Check variable is specified for record_key as a string
+\item Check geog and tab_vars are either character vectors or NULL
+\item Check specified record_key is character vector or NULL
 \item Check threshold is an integer and non-negative
 }
 \item Validate microdata and ptable contain required columns

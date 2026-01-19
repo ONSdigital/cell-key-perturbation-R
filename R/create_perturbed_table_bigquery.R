@@ -44,6 +44,12 @@
 #' @param record_key --`character`.
 #'   Column name with record keys required for perturbation,
 #'   e.g., `"Record_Key"`.
+#'   If data contains "ons_id" and use_existing_ons_id = TRUE,
+#'   set (record_key = NULL), as record key will be generated from "ons_id".
+#' @param use_existing_ons_id -- `logical`
+#'   Whether to create record keys from ons_id, if ons_id exists in data.
+#'   It will be irrelevant if microdata does not contain ons_id.
+#'   Default is TRUE.
 #' @param threshold --`integer`.
 #'   Suppression threshold; perturbed counts below this value are suppressed.
 #'   Default 10.
@@ -102,6 +108,7 @@ create_perturbed_table_bigquery <- function(
     geog,
     tab_vars,
     record_key,
+    use_existing_ons_id = TRUE,
     threshold = 10,
     return_query = FALSE)
 {
@@ -130,6 +137,19 @@ create_perturbed_table_bigquery <- function(
       call. = FALSE)
   }
 
+  # Update query to generate record keys from "ons_id" if exists
+  data_schema <- DBI::dbGetQuery(con, sprintf("SELECT * FROM `%s` LIMIT 0",
+                                              data))
+
+  if (use_existing_ons_id && ("ons_id" %in% colnames(data_schema))) {
+    message('NOTE: "ons_id" column is available in data!',
+            '\nUpdating query to generate record keys from "ons_id"!')
+
+    query <- gsub(paste0("SAFE_CAST(", record_key, " AS INT64)"),
+                  "MOD(SAFE_CAST(ons_id AS INT64), 4096)",
+                  query, fixed = TRUE)
+  }
+
   validate_inputs_bigquery(
     con        = con,
     data       = data,
@@ -137,6 +157,7 @@ create_perturbed_table_bigquery <- function(
     geog       = geog,
     tab_vars   = tab_vars,
     record_key = record_key,
+    use_existing_ons_id = use_existing_ons_id,
     threshold  = threshold
   )
 
