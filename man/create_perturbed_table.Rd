@@ -10,6 +10,7 @@ create_perturbed_table(
   geog,
   tab_vars,
   record_key,
+  use_existing_ons_id = TRUE,
   threshold = 10
 )
 }
@@ -31,7 +32,14 @@ variables to be tabulated.
 This can be an empty vector, \code{c()}, provided a geography level is supplied.}
 
 \item{record_key}{A \code{character} containing the column name in \code{data} giving
-the record keys required for perturbation.}
+the record keys required for perturbation.
+If data contains "ons_id" and use_existing_ons_id = TRUE,
+set (record_key = NULL), as record key will be generated from "ons_id".}
+
+\item{use_existing_ons_id}{A \code{logical} on whether to create record keys
+from ons_id, if ons_id exists in data.
+It will be irrelevant if microdata does not contain ons_id.
+Default is TRUE.}
 
 \item{threshold}{An \code{integer} specifying the value below which counts are
 suppressed, with a default value of 10.}
@@ -61,9 +69,9 @@ perturbed_table <- create_perturbed_table(micro,
 # Alternatively
 perturbed_table <- create_perturbed_table(data = micro,
                                           ptable = ptable_10_5,
-                                          record_key = "record_key",
                                           geog = c(),
                                           tab_vars = c("var1","var5","var8"),
+                                          record_key = "record_key",
                                           threshold = 10)
 
 }

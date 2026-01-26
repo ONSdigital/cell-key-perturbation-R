@@ -4,7 +4,12 @@
 \alias{generate_ptable_10_5_rule}
 \title{Generate ptable (10-5 rule)}
 \usage{
-generate_ptable_10_5_rule()
+generate_ptable_10_5_rule(max_pcv = 750, ckey_range = 255)
+}
+\arguments{
+\item{max_pcv}{Max value for pcv. Default is 750.}
+
+\item{ckey_range}{The max range for cell keys. Default is 255.}
 }
 \value{
 A data.table assigning a pvalue to each ckey and pcv combination

@@ -4,10 +4,10 @@
 \alias{generate_test_data}
 \title{Generate sample microdata}
 \usage{
-generate_test_data(size, rkey_range = 255)
+generate_test_data(size = 1000, rkey_range = 255)
 }
 \arguments{
-\item{size}{Number of rows in the sample microdata}
+\item{size}{Number of rows in the sample microdata. Default is 1000.}
 
 \item{rkey_range}{The max range for record keys. Default is 255.}
 }

@@ -24,13 +24,16 @@ variables to be tabulated.
 This can be an empty vector, \code{c()}, provided a geography level is supplied.}
 
 \item{record_key}{A \code{character} containing the column name in \code{data} giving
-the record keys required for perturbation.}
+the record keys required for perturbation.
+If data contains "ons_id" and use_existing_ons_id = TRUE,
+set (record_key = NULL), as record key will be generated from "ons_id".}
 
 \item{threshold}{An \code{integer} specifying the value below which counts are
 suppressed, with a default value of 10.}
 }
 \value{
-Stop or Warning messages if any validation fails.
+Invisibly returns TRUE on success. Throws stop or Warning messages
+if any validation fails.
 }
 \description{
 Validates inputs for a perturbation process.
@@ -39,7 +42,8 @@ Validates inputs for a perturbation process.
 \item Validate other input arguments
 \itemize{
 \item Check that at least one variable specified for geog or tab_vars
-\item Check variable is specified for record_key as a string
+\item Check geog and tab_vars are either character vectors or NULL
+\item Check specified record_key is character vector or NULL
 \item Check threshold is an integer and non-negative
 }
 \item Validate microdata and ptable contain required columns
@@ -48,7 +52,7 @@ Validates inputs for a perturbation process.
 \item Check ptable contains required columns
 }
 \item Validate the range of record keys and cell keys
-\item Validate data has sufficient \% records with record keys to apply perturbation
+\item Validate data has sufficient records with record keys to apply perturbation
 }
 }
 \examples{
@@ -59,3 +63,4 @@ validate_inputs(data = micro,
                 tab_vars = c("var5","var8"),
                 threshold = 10)
 }
+\keyword{internal}
