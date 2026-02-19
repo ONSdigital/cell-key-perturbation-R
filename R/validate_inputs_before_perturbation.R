@@ -320,17 +320,10 @@ check_missing_record_key <- function(rkey_na_count, rkey_percent)
     stop(message_string)
   }
   else if (rkey_percent < 100){
-    if (rkey_percent < 99.94){
-      warning_string1 <- paste("Only",round(rkey_percent,1),
-                               "% of records have a record key.")
-    }
-    if (rkey_na_count == 1){
-      warning_string2 <- "There is 1 record with a missing record key."
-    }
-    else {
-      warning_string2 <- paste("There are",rkey_na_count,
-                               "records with missing record keys.")
-    }
-    warning(cat(warning_string1,warning_string2))
+    warning_string <- paste(
+      sprintf("Only %.1f%% of records have record keys.",round(rkey_percent,1)),
+      sprintf("\n%s record(s) have missing record keys.", rkey_na_count)
+    )
+    warning(warning_string)
   }
 }
