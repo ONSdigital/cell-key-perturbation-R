@@ -21,5 +21,5 @@ tables for testing purposes.
 \examples{
 library(data.table)
 data <- data.table(id = 1:1000)
-generate_random_rkey(data)
+data <- generate_random_rkey(data, rkey_range = 255)
 }
