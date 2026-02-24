@@ -165,6 +165,9 @@ create_perturbed_table_bigquery <- function(
 
   perturbed_table <- as.data.table(perturbed_table)
 
+  cols <- c("pre_sdc_count","ckey","pcv","pvalue","count")
+  perturbed_table[, (cols) := lapply(.SD, as.integer), .SDcols = cols]
+
   sort_cols <- c(geog, tab_vars)
   setorderv(perturbed_table, sort_cols)
 

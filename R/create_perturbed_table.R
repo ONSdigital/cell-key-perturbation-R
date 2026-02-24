@@ -120,6 +120,7 @@ create_perturbed_table <- function(
   # Step 4: Merge on ptable to get perturbation value for each cell
   aggregated_table <- merge(aggregated_table, ptable, by = c("ckey","pcv"),
                             sort=FALSE, all.x=TRUE)
+  setcolorder(aggregated_table, c(cols,"pre_sdc_count","ckey","pcv","pvalue"))
 
   # Step 5: Apply the perturbation and suppress counts less than the threshold
   setDT(aggregated_table)[,count := pre_sdc_count + pvalue,]
@@ -135,6 +136,9 @@ create_perturbed_table <- function(
 
   #setting count to be missing if less than threshold
   aggregated_table[count<threshold, count:=NaN]
+
+  cols <- c("pre_sdc_count","ckey","pcv","pvalue","count")
+  aggregated_table[, (cols) := lapply(.SD, as.integer), .SDcols = cols]
 
   return(aggregated_table)
 }
