@@ -111,7 +111,7 @@ validate_inputs_bigquery <- function(
   data_schema <- DBI::dbGetQuery(con, sprintf("SELECT * FROM `%s` LIMIT 0",
                                               data))
   if (use_existing_ons_id && ("ons_id" %in% colnames(data_schema))) {
-    record_key = NULL
+    record_key = "NULL"
   }
 
   # 1) Validate input arguments
@@ -120,6 +120,7 @@ validate_inputs_bigquery <- function(
          specifying location of tables in BigQuery database!")
   }
   check_input_arguments(geog, tab_vars, record_key, threshold)
+
 
   # 2) Check microdata contains required columns
   required_columns <- c(geog, tab_vars, record_key)
@@ -194,8 +195,8 @@ validate_inputs_bigquery <- function(
   records_key_query <- sprintf("
     SELECT
       COUNT(*) AS total_records,
-      COUNTIF(%s IS NULL) AS null_record_keys,
-      ROUND(100.0 * COUNTIF(%s IS NOT NULL) / COUNT(*), 2) AS percent_with_keys
+      COUNTIF(SAFE_CAST(%s AS INT64) IS NULL) AS null_record_keys,
+      ROUND(100.0 * COUNTIF(SAFE_CAST(%s AS INT64) IS NOT NULL) / COUNT(*), 2) AS percent_with_keys
     FROM `%s`
   ", record_key, record_key, data)
 
@@ -211,6 +212,8 @@ validate_inputs_bigquery <- function(
   rkey_percent   <- rkey[["percent_with_keys"]][1]
 
   check_missing_record_key(rkey_nan_count, rkey_percent)
+
+  message("Validation checks are completed!")
 
   invisible(TRUE)
 }
