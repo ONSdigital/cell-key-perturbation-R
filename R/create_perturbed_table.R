@@ -94,7 +94,11 @@ create_perturbed_table <- function(
   data[,(cols):=lapply(.SD,as.factor),.SDcols=cols]
 
   #tabulate - using 'table' function to get zero cells
-  aggregated_table <- as.data.table(table(data[,c(geog,tab_vars), with=FALSE]))
+  aggregated_table <- as.data.table(
+    table(
+      data[, c(geog, tab_vars), with=FALSE], useNA = "ifany"
+    )
+  )
   colnames(aggregated_table)[colnames(aggregated_table) == "N"] <-
     "pre_sdc_count"
 
