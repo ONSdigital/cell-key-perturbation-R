@@ -144,5 +144,7 @@ create_perturbed_table <- function(
   cols <- c("pre_sdc_count","ckey","pcv","pvalue","count")
   aggregated_table[, (cols) := lapply(.SD, as.integer), .SDcols = cols]
 
+  check_for_na(DT = aggregated_table, cols = c(geog, tab_vars))
+
   return(aggregated_table)
 }

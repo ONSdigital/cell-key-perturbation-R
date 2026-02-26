@@ -171,6 +171,8 @@ create_perturbed_table_bigquery <- function(
   sort_cols <- c(geog, tab_vars)
   setorderv(perturbed_table, sort_cols)
 
+  check_for_na(DT = perturbed_table, cols = c(geog, tab_vars))
+
   return(perturbed_table)
 }
 
