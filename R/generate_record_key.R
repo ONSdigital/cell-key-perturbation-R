@@ -49,8 +49,12 @@ generate_record_key_from_ons_id <- function(data, record_key_col) {
 #' @examples
 #' library(data.table)
 #' data <- data.table(id = 1:1000)
-#' generate_random_rkey(data)
+#' data <- generate_random_rkey(data, rkey_range = 255)
 generate_random_rkey <- function(data, rkey_range = 255) {
+
+  if (!data.table::is.data.table(data)) {
+    stop("Input data must be a 'data.table'!")
+  }
   dt <- copy(data)
 
   set.seed(2025)

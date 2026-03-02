@@ -111,7 +111,7 @@ validate_inputs_bigquery <- function(
   data_schema <- DBI::dbGetQuery(con, sprintf("SELECT * FROM `%s` LIMIT 0",
                                               data))
   if (use_existing_ons_id && ("ons_id" %in% colnames(data_schema))) {
-    record_key = NULL
+    record_key = "NULL"
   }
 
   # 1) Validate input arguments
@@ -120,6 +120,7 @@ validate_inputs_bigquery <- function(
          specifying location of tables in BigQuery database!")
   }
   check_input_arguments(geog, tab_vars, record_key, threshold)
+
 
   # 2) Check microdata contains required columns
   required_columns <- c(geog, tab_vars, record_key)
@@ -194,8 +195,8 @@ validate_inputs_bigquery <- function(
   records_key_query <- sprintf("
     SELECT
       COUNT(*) AS total_records,
-      COUNTIF(%s IS NULL) AS null_record_keys,
-      ROUND(100.0 * COUNTIF(%s IS NOT NULL) / COUNT(*), 2) AS percent_with_keys
+      COUNTIF(SAFE_CAST(%s AS INT64) IS NULL) AS null_record_keys,
+      ROUND(100.0 * COUNTIF(SAFE_CAST(%s AS INT64) IS NOT NULL) / COUNT(*), 2) AS percent_with_keys
     FROM `%s`
   ", record_key, record_key, data)
 
@@ -211,6 +212,8 @@ validate_inputs_bigquery <- function(
   rkey_percent   <- rkey[["percent_with_keys"]][1]
 
   check_missing_record_key(rkey_nan_count, rkey_percent)
+
+  message("Validation checks are completed!")
 
   invisible(TRUE)
 }
@@ -320,17 +323,10 @@ check_missing_record_key <- function(rkey_na_count, rkey_percent)
     stop(message_string)
   }
   else if (rkey_percent < 100){
-    if (rkey_percent < 99.94){
-      warning_string1 <- paste("Only",round(rkey_percent,1),
-                               "% of records have a record key.")
-    }
-    if (rkey_na_count == 1){
-      warning_string2 <- "There is 1 record with a missing record key."
-    }
-    else {
-      warning_string2 <- paste("There are",rkey_na_count,
-                               "records with missing record keys.")
-    }
-    warning(cat(warning_string1,warning_string2))
+    warning_string <- paste(
+      sprintf("Only %.1f%% of records have record keys.",round(rkey_percent,1)),
+      sprintf("\n%s record(s) have missing record keys.", rkey_na_count)
+    )
+    warning(warning_string)
   }
 }

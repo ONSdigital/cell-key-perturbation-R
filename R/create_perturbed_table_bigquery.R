@@ -165,8 +165,13 @@ create_perturbed_table_bigquery <- function(
 
   perturbed_table <- as.data.table(perturbed_table)
 
+  cols <- c("pre_sdc_count","ckey","pcv","pvalue","count")
+  perturbed_table[, (cols) := lapply(.SD, as.integer), .SDcols = cols]
+
   sort_cols <- c(geog, tab_vars)
   setorderv(perturbed_table, sort_cols)
+
+  check_for_na(DT = perturbed_table, cols = c(geog, tab_vars))
 
   return(perturbed_table)
 }
@@ -190,8 +195,9 @@ build_perturbation_bigquery <- function(
   dim_ctes_str   <- paste(dim_ctes, collapse = ",\n\t")
   cross_join     <- paste(paste0("dim_", all_vars),
                           collapse = "\n\tCROSS JOIN ")
-  join_conditions <- paste(paste0("g.", all_vars, " = b.", all_vars),
-                           collapse = " AND ")
+  join_conditions <- paste(paste0("g.", all_vars,
+                                  " IS NOT DISTINCT FROM b.", all_vars),
+                           collapse = "\n\t\tAND ")
   select_columns  <- paste(paste0("g.", all_vars), collapse = ", ")
 
   # Compose query
@@ -234,7 +240,8 @@ build_perturbation_bigquery <- function(
 -- Step 5: Compute cell key modulo
     ckey_mod AS (
         SELECT *,
-            MOD(sum_rkey, (SELECT MAX(ckey) + 1 FROM `", ptable, "`)) AS ckey
+            MOD(sum_rkey, (SELECT MAX(ckey) + 1
+              FROM `", ptable, "`)) AS ckey
         FROM full_counts
     ),
 

@@ -94,7 +94,11 @@ create_perturbed_table <- function(
   data[,(cols):=lapply(.SD,as.factor),.SDcols=cols]
 
   #tabulate - using 'table' function to get zero cells
-  aggregated_table <- as.data.table(table(data[,c(geog,tab_vars), with=FALSE]))
+  aggregated_table <- as.data.table(
+    table(
+      data[, c(geog, tab_vars), with=FALSE], useNA = "ifany"
+    )
+  )
   colnames(aggregated_table)[colnames(aggregated_table) == "N"] <-
     "pre_sdc_count"
 
@@ -120,6 +124,7 @@ create_perturbed_table <- function(
   # Step 4: Merge on ptable to get perturbation value for each cell
   aggregated_table <- merge(aggregated_table, ptable, by = c("ckey","pcv"),
                             sort=FALSE, all.x=TRUE)
+  setcolorder(aggregated_table, c(cols,"pre_sdc_count","ckey","pcv","pvalue"))
 
   # Step 5: Apply the perturbation and suppress counts less than the threshold
   setDT(aggregated_table)[,count := pre_sdc_count + pvalue,]
@@ -135,6 +140,11 @@ create_perturbed_table <- function(
 
   #setting count to be missing if less than threshold
   aggregated_table[count<threshold, count:=NaN]
+
+  cols <- c("pre_sdc_count","ckey","pcv","pvalue","count")
+  aggregated_table[, (cols) := lapply(.SD, as.integer), .SDcols = cols]
+
+  check_for_na(DT = aggregated_table, cols = c(geog, tab_vars))
 
   return(aggregated_table)
 }
