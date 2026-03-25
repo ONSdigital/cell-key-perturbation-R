@@ -96,12 +96,12 @@ Other **ptables** may be available depending on the **microdata** used, for exam
 
 ## Installing the SML method
 
-This method requires R version 2.10 or higher and uses the data.table package.
+This method requires R version 3.5 or higher and uses the `data.table` package.
 
-The method package can be installed by downloading the tar file from [https://github.com/ONSdigital/cell-key-perturbation-R/releases](https://github.com/ONSdigital/cell-key-perturbation-R/releases) and using the following code in the RStudio terminal, specifying your download location:
+You can install the released version of `cellkeyperturbation` from CRAN:
 
 ```r
-install.packages("<path_to_file>/cellkeyperturbation_1.0.0.tar.gz", repos = NULL, type="source", build_vignettes = TRUE)
+install.packages("cellkeyperturbation")
 ```
 
 In your code you can load the cell key perturbation package using:
@@ -310,27 +310,12 @@ fwrite(perturbed_table, "perturbed_table.csv")
 
 ## Appendix - Help Pages
 
-The help pages for the package include 
-
-- Introduction to cellkeyperturbation vignette
-- create_perturbed_table - describes the main function used to create a 
-frequency table with perturbation applied
-- micro - an example randomly generated dataset to showcase the method
-- ptable_10_5 - an example ptable for applying perturbation with a threshold 
-of 10 and rounding to base 5
-
-These can be viewed by selecting the cellkeyperturbation package name in the 
-packages tab of RStudio or using: 
+The package includes further help pages like Introduction to Cell Key Perturbation vignette 
+and documentation for each function. You can access these pages by selecting the 
+`cellkeyperturbation` package name in the packages tab of RStudio or using: 
 
 ```r
 help(package=cellkeyperturbation)
-
-vignette("intro_to_cellkeyperturbation")
-
-#library(cellkeyperturbation)
-help(create_perturbed_table)
-help(micro)
-help(ptable_10_5)
 ```
 
 
