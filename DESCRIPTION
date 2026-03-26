@@ -1,11 +1,15 @@
 Package: cellkeyperturbation
-Title: R implementation of cell key perturbation
-Version: 2.0.0
+Title: Cell Key Perturbation in R
+Version: 3.0.0
 Authors@R: c(
-    person("Iain", "Dove", email = "SMLHelp@ons.gov.uk", role = "aut"),
-    person("Ahmet", "Aydin", email = "SDC.Queries@ons.gov.uk", role = c("aut", "cre")))
+    person("Iain", "Dove", email = "SMLHelp@ons.gov.uk", 
+    role = c("aut", "cph")),
+    person("Ahmet", "Aydin", email = "SDC.Queries@ons.gov.uk", 
+    role = c("aut", "cre")))
 Description: R implementation of cell key perturbation developed at the
-    UK Office for National Statistics.
+    UK Office for National Statistics. This method creates a frequency table 
+    which has had cell key perturbation applied to the counts to protect against
+    disclosure.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
