@@ -141,7 +141,7 @@ perturbation is applied.
 Common parameters for both versions:
 
 - **`geog`** - (Geography) - a character vector giving the column name in `data` that contains the desired geography level you wish to tabulate at, e.g. `c("Local_Authority", "Ward")`. This can be the empty vector, `geog = c()`, if no geography level is required.
-- **`tab_vars`** - (Variables to tabulate) - a character vector giving the column names in `data` of the variables to be tabulated e.g. `c("Age","Health","Occupation")`. This can also be the empty vector, `tab_vars = c()`. However, at least one of `tab_vars` or `geog` must be populated. if both are left blank an error message will be returned.
+- **`tab_vars`** - (Variables to tabulate) - a character vector giving the column names in `data` of the variables to be tabulated e.g. `c("Age","Health","Occupation")`. This can also be the empty vector, `tab_vars = c()`. However, at least one of `tab_vars` or `geog` must be populated. If both are left blank an error message will be returned.
 - **`record_key`** - a character containing the column name in `data` giving the record keys required for perturbation. If `ons_id` is available as a column in `data` and `use_existing_ons_id = TRUE`, set `record_key = NULL`, as record keys will be generated from `ons_id`.
 - **`use_existing_ons_id`** - `TRUE` or `FALSE`, with a default of `TRUE`. If `ons_id` is available as a column in `data`, then record keys will be derived from `ons_id` by default.
 - **`threshold`** - the value below which a count is suppressed (default 10).
@@ -211,12 +211,12 @@ View(ptable_10_5)
 
 You can also generate different sample data or generate random record keys for testing purposes for your own test data with the following code:
 ```R
-data = generate_test_data(size = 1000, key_range = 255)
-ptable = generate_ptable_10_5_rule(key_range = 255)
+data = generate_test_data(size = 1000, rkey_range = 255)
+ptable = generate_ptable_10_5_rule(ckey_range = 255)
 
 library(data.table)
 data <- fread("input_microdata.csv")
-data = generate_random_rkey(data, key_range = 255)
+data = generate_random_rkey(data, rkey_range = 255)
 ```
 
 - **`micro`**: A sample `data.table` containing randomly generated microdata and record keys.
@@ -263,9 +263,9 @@ The output from the code is a `data.table` containing a frequency table with
 the counts having been affected by perturbation, as specified in the ptable. 
 
 For most ptables, the most obvious effect will be that all counts lower than the 
-threshold of 10 will have been removed. Supressing counts below the threshold is a 
-condition that need to be met when exporting data from IDS and many other secure 
-environments such as SRS.
+threshold of 10 will have been removed. Suppressing counts below the threshold is a 
+condition that need to be met when exporting data from IDS (Integrated Data Service)
+and many other secure environments such as SRS (Secure Research Service).
 
 The perturbation code will treat categories for missing data in the same way as it treats other categories. 
 If you would like to exclude missing data from your outputs, you will need to remove the missing data categories either before or after applying the perturbation.
@@ -282,7 +282,7 @@ The table will be in the following format:
   | ...   | ...   | ...   |        ...    | ...   | ...   |  ...   |  ...   | 
   
 
-The table contains the variables used as the categories used to summarise the 
+The table contains the variables used to summarise the 
 data (in this example `var1`, `var5` & `var8`), and five other columns:
 
 - `ckey` is the sum of record keys for each combination of variables.

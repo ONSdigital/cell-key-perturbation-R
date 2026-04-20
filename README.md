@@ -109,7 +109,7 @@ Common parameters for both versions:
   the column names in `data` of the variables to be tabulated
   e.g. `c("Age","Health","Occupation")`. This can also be the empty
   vector, `tab_vars = c()`. However, at least one of `tab_vars` or
-  `geog` must be populated. if both are left blank an error message will
+  `geog` must be populated. If both are left blank an error message will
   be returned.
 - **`record_key`** - a character containing the column name in `data`
   giving the record keys required for perturbation. If `ons_id` is
@@ -138,12 +138,12 @@ keys for testing purposes for your own test data with the following
 code:
 
 ``` r
-data = generate_test_data(size = 1000, key_range = 255)
-ptable = generate_ptable_10_5_rule(key_range = 255)
+data = generate_test_data(size = 1000, rkey_range = 255)
+ptable = generate_ptable_10_5_rule(ckey_range = 255)
 
 library(data.table)
 data <- fread("input_microdata.csv")
-data = generate_random_rkey(data, key_range = 255)
+data = generate_random_rkey(data, rkey_range = 255)
 ```
 
 - **`micro`**: A sample `data.table` containing randomly generated
@@ -196,9 +196,10 @@ with the counts having been affected by perturbation, as specified in
 the ptable.
 
 For most ptables, the most obvious effect will be that all counts lower
-than the threshold of 10 will have been removed. Supressing counts below
-the threshold is a condition that need to be met when exporting data
-from IDS and many other secure environments such as SRS.
+than the threshold of 10 will have been removed. Suppressing counts
+below the threshold is a condition that need to be met when exporting
+data from IDS (Integrated Data Service) and many other secure
+environments such as SRS (Secure Research Service).
 
 The perturbation code will treat categories for missing data in the same
 way as it treats other categories. If you would like to exclude missing
@@ -216,9 +217,8 @@ The table will be in the following format:
 | 1    | 2    | A    | 11            | 190  | 11  | -1     | 10    |
 | …    | …    | …    | …             | …    | …   | …      | …     |
 
-The table contains the variables used as the categories used to
-summarise the data (in this example `var1`, `var5` & `var8`), and five
-other columns:
+The table contains the variables used to summarise the data (in this
+example `var1`, `var5` & `var8`), and five other columns:
 
 - `ckey` is the sum of record keys for each combination of variables.
 - `pcv` is the perturbation cell value, the pre-perturbation count
