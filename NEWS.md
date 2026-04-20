@@ -13,7 +13,7 @@ to be able to work with large datasets in a Google Cloud Platform environment.
 
 * Created functions to generate sample microdata, ptable_10_5, and random record 
 keys for testing purposes, with alternative parameters allowed. 
-The sample microdata included in the package is identical with the one in python 
+The sample microdata included in this package is identical to the sample in the python
 version ([cell-key-perturbation](https://github.com/ONSdigital/cell-key-perturbation)). 
 However, a new sample of microdata created in R with the same parameters would not be 
 identical to the sample in python, due to differences in Random Number Generation.
