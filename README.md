@@ -1,61 +1,250 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# cellkeyperturbation
+# Cell Key Perturbation
 
 <!-- badges: start -->
+
+[![R-CMD-check](https://github.com/ONSdigital/cell-key-perturbation-R/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ONSdigital/cell-key-perturbation-R/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-This package runs the SDC methods required for frequency tables in IDS.
-It enables the user to create a frequency table which has cell key
-perturbation applied to the counts, meaning that users cannot be sure
-whether differences between tables represent a real person, or are
-caused by the perturbation.
+This method creates a frequency table which has had cell key
+perturbation applied to the counts to protect against disclosure.
+
+Cell key perturbation adds small amounts of noise to frequency tables.
+Noise is added to change the counts that appear in the frequency table
+by small amounts, for example a 14 is changed to a 15. This noise
+introduces uncertainty in the counts and makes it harder to identify
+individuals, especially when taking the ‘difference’ between two similar
+tables. It protects against the risk of disclosure by differencing since
+it cannot be determined whether a difference between two similar tables
+represents a real person, or is caused by the perturbation.
 
 Cell Key Perturbation is consistent and repeatable, so the same cells
 are always perturbed in the same way.
 
-To improve speed and reduce memory usage for very large datasets, this
-package uses the data.table package. Data passed in to the method must
-be a data table, and the perturbed frequency table is returned as a data
-table.
+It is expected that users will tabulate 1 to 4 variables for a
+particular geography level - for example, tabulate age by sex at local
+authority level. 
 
-## Installation
+### BigQuery
 
-You can install cellkeyperturbation from [GitHub](https://github.com/ONSdigital/cell-key-perturbation-R) with:
+The BigQuery version allows users to perform perturbation without
+reading raw data into local memory. The package creates the frequency
+table and runs perturbation with an SQL query. Then, it converts the
+final perturbed table into a `data.table` as an output.
+
+This will allow users to run the method on large datasets without
+breaking the memory limits.
+
+### Terminology
+
+- ***Microdata*** - Data at the level of individual respondents
+- ***Record key*** - A random number assigned to each record
+- ***Cell value*** - The number of records or frequency for a cell
+- ***Cell key*** - The sum of record keys for a given cell
+- ***pvalue*** - Perturbation value. The value of noise added to cells,
+  e.g. +1, -1
+- ***pcv*** - Perturbation cell value. This is an amended cell value
+  needed to merge on the ptable
+- ***ptable*** - Perturbation table. The look-up file containing the
+  pvalues, this determines which cells get perturbed and by how much.
+
+# User Instructions
+
+## Installing the method
+
+This method requires R version 3.5 or higher and uses the `data.table`
+package.
+
+You can install the released version of `cellkeyperturbation` from CRAN:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("ONSdigital/cell-key-perturbation-R", build_vignettes = TRUE)
+install.packages("cellkeyperturbation")
 ```
 
-## Example
-
-This is an example showing how to create a perturbed table from data
-which has been included in this package in order to showcase the method.
-
-micro is an example dataset (data table) containing randomly generated
-data.
-
-ptable_10_5 is an example ptable (data table) containing the rules to
-apply cell key perturbation with a threshold of 10 and rounding to base
-5.
+In your code you can load the cell key perturbation package using:
 
 ``` r
 library(cellkeyperturbation)
-perturbed_table <-create_perturbed_table(data = micro,
-                                         record_key = "record_key",
-                                         geog = c("var1"),
-                                         tab_vars = c("var5","var8"),
-                                         ptable = ptable_10_5,
-                                         threshold = 10)
 ```
 
-## Help
+## Using the method
 
-Links to the Help Pages and User Guide (Introduction to
-cellkeyperturbation) can be accessed using:
+You can call the main functions for cell key perturbation with the
+following parameters:
 
 ``` r
-help(package="cellkeyperturbation")
+# for data.table
+create_perturbed_table(data, ptable, geog, tab_vars, record_key, use_existing_ons_id, threshold)
+
+# for BigQuery
+create_perturbed_table_bigquery(con, data, ptable, geog, tab_vars, record_key, use_existing_ons_id, threshold)
+```
+
+Parameters specific for BigQuery version:
+
+- **`con`** - (DBIConnection) - An active BigQuery connection created
+  with `DBI::dbConnect()`
+- **`data`** - (Microdata) - a `character` for the full name of
+  micro-level `data` in BigQuery in “\<PROJECT\>.\<DATASET\>.\<TABLE\>”
+  format.
+- **`ptable`** - (Perturbation table) - a `character` for the full name
+  of `ptable` in BigQuery in “\<PROJECT\>.\<DATASET\>.\<TABLE\>” format.
+
+Parameters specific for data.table version:
+
+- **`data`** - (Microdata) - a `data.table` containing the micro-level
+  `data` to be tabulated and perturbed.
+- **`ptable`** - (Perturbation table) - a `data.table` containing the
+  `ptable` file which determines when perturbation is applied.
+
+Common parameters for both versions:
+
+- **`geog`** - (Geography) - a character vector giving the column name
+  in `data` that contains the desired geography level you wish to
+  tabulate at, e.g. `c("Local_Authority", "Ward")`. This can be the
+  empty vector, `geog = c()`, if no geography level is required.
+- **`tab_vars`** - (Variables to tabulate) - a character vector giving
+  the column names in `data` of the variables to be tabulated
+  e.g. `c("Age","Health","Occupation")`. This can also be the empty
+  vector, `tab_vars = c()`. However, at least one of `tab_vars` or
+  `geog` must be populated. If both are left blank an error message will
+  be returned.
+- **`record_key`** - a character containing the column name in `data`
+  giving the record keys required for perturbation. If `ons_id` is
+  available as a column in `data` and `use_existing_ons_id = TRUE`, set
+  `record_key = NULL`, as record keys will be generated from `ons_id`.
+- **`use_existing_ons_id`** - `TRUE` or `FALSE`, with a default of
+  `TRUE`. If `ons_id` is available as a column in `data`, then record
+  keys will be derived from `ons_id` by default.
+- **`threshold`** - the value below which a count is suppressed (default
+  10).
+
+## Worked Example with Synthetic Data (`data.table`)
+
+This is an example showing how to create a perturbed table from
+synthetic test data provided in the package (`micro` and `ptable_10_5`).
+You can access and view these data tables after loading the package.
+
+``` r
+library(cellkeyperturbation)
+View(micro)
+View(ptable_10_5)
+```
+
+You can also generate different sample data or generate random record
+keys for testing purposes for your own test data with the following
+code:
+
+``` r
+data = generate_test_data(size = 1000, rkey_range = 255)
+ptable = generate_ptable_10_5_rule(ckey_range = 255)
+
+library(data.table)
+data <- fread("input_microdata.csv")
+data = generate_random_rkey(data, rkey_range = 255)
+```
+
+- **`micro`**: A sample `data.table` containing randomly generated
+  microdata and record keys.
+
+Example rows of a microdata table are shown below:
+
+| record_key | var1 | var5 | var8 |
+|:-----------|:-----|:-----|:-----|
+| 84         | 2    | 9    | D    |
+| 108        | 1    | 9    | C    |
+| 212        | 1    | 1    | D    |
+| 212        | 2    | 2    | A    |
+| 86         | 2    | 4    | A    |
+
+- **`ptable_10_5`**: A sample perturbation table (`data.table`) that
+  defines the cell key perturbation rules. This specific table applies
+  the ’10 to 5 rule’, which means a suppression threshold of *10* and
+  rounding to the nearest *5*. In other words, this ptable will remove
+  all cells under *10*, and round all others to the nearest *5*.
+
+Example rows of a ptable are shown below:
+
+| pcv | ckey | pvalue |
+|:----|:-----|:-------|
+| 1   | 0    | -1     |
+| 1   | 1    | -1     |
+| 1   | 2    | -1     |
+| …   | …    | …      |
+| 750 | 255  | 0      |
+
+Use the following code to generate the perturbed table using the sample
+microdata and perturbation table provided:
+
+``` r
+perturbed_table <- create_perturbed_table(
+  data       = micro,
+  ptable     = ptable_10_5,
+  geog       = c("var1"),
+  tab_vars   = c("var5","var8"),
+  record_key = "record_key",
+  threshold  = 10
+)
+```
+
+## Interpreting the Output
+
+The output from the code is a `data.table` containing a frequency table
+with the counts having been affected by perturbation, as specified in
+the ptable.
+
+For most ptables, the most obvious effect will be that all counts lower
+than the threshold of 10 will have been removed. Suppressing counts
+below the threshold is a condition that need to be met when exporting
+data from IDS (Integrated Data Service) and many other secure
+environments such as SRS (Secure Research Service).
+
+The perturbation code will treat categories for missing data in the same
+way as it treats other categories. If you would like to exclude missing
+data from your outputs, you will need to remove the missing data
+categories either before or after applying the perturbation.
+
+The table will be in the following format:
+
+| var1 | var5 | var8 | pre_sdc_count | ckey | pcv | pvalue | count |
+|:-----|:-----|:-----|:--------------|:-----|:----|:-------|:------|
+| 1    | 1    | A    | 10            | 173  | 10  | 0      | 10    |
+| 1    | 1    | B    | 10            | 88   | 10  | 0      | 10    |
+| 1    | 1    | C    | 7             | 180  | 7   | -7     | nan   |
+| 1    | 1    | D    | 14            | 66   | 14  | 1      | 15    |
+| 1    | 2    | A    | 11            | 190  | 11  | -1     | 10    |
+| …    | …    | …    | …             | …    | …   | …      | …     |
+
+The table contains the variables used to summarise the data (in this
+example `var1`, `var5` & `var8`), and five other columns:
+
+- `ckey` is the sum of record keys for each combination of variables.
+- `pcv` is the perturbation cell value, the pre-perturbation count
+  modulo 750.
+- `pre_sdc_count` is the pre-perturbation count.
+- `pvalue` is the perturbation applied to the original count, most
+  commonly it will be 0. This is obtained from the ptable using a join
+  on `ckey` and `pcv`.
+- `count` is the post-perturbation count, the values to be output. It
+  will be set to `NA` if the value is suppressed for being below the
+  threshold.
+
+The columns you are most likely interested in are the variables, which
+are the categories you’ve summarised by, plus the `count` column.
+
+**WARNING! - The `ckey`, `pcv`, `pre_sdc_count` and `pvalue` columns
+should be dropped before the contingency table is published. Otherwise,
+the perturbation can be unpicked and the output will be disclosive.**
+
+## Appendix - Help Pages
+
+The package includes further help pages like Introduction to Cell Key
+Perturbation vignette and documentation for each function. You can
+access these pages by selecting the `cellkeyperturbation` package name
+in the packages tab of RStudio or using:
+
+``` r
+help(package=cellkeyperturbation)
 ```

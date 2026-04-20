@@ -1,4 +1,32 @@
 
+# cellkeyperturbation 3.0.0
+
+## Major Changes
+
+* Functionality to create perturbed table using BigQuery including validation process
+to be able to work with large datasets in a Google Cloud Platform environment.
+
+* Generate record keys from ons_id as default where ons_id exists, with an option to turn it off.
+
+
+## Minor improvements and bug fixes
+
+* Created functions to generate sample microdata, ptable_10_5, and random record 
+keys for testing purposes, with alternative parameters allowed. 
+The sample microdata included in this package is identical to the sample in the python
+version ([cell-key-perturbation](https://github.com/ONSdigital/cell-key-perturbation)). 
+However, a new sample of microdata created in R with the same parameters would not be 
+identical to the sample in python, due to differences in Random Number Generation.
+
+* Validation moved to a separate module with improved and additional validation checks.
+
+* **Tabulation with missing values:** Missing values will be included in the frequency table, 
+treating missingess as a category. Added a check function for missing values in tabulation variables, 
+which returns a warning message if any of the tabulation variables contains missing values 
+and suggests to consider removing them.
+
+* Re-ordered columns and standardised the data type for output tables.
+
 # cellkeyperturbation 2.0.0
 
 * New threshold parameter added (with default of 10) for the create_perturbed_table function. Counts < threshold will be set to missing. This means that the user will not need to go through an additional process to suppress small counts after applying perturbation.
