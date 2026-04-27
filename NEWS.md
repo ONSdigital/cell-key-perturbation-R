@@ -21,7 +21,7 @@ identical to the sample in python, due to differences in Random Number Generatio
 * Validation moved to a separate module with improved and additional validation checks.
 
 * **Tabulation with missing values:** Missing values will be included in the frequency table, 
-treating missingess as a category. Added a check function for missing values in tabulation variables, 
+treating missingness as a category. Added a check function for missing values in tabulation variables, 
 which returns a warning message if any of the tabulation variables contains missing values 
 and suggests to consider removing them.
 
