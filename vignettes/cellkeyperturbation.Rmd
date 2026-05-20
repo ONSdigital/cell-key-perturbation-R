@@ -211,12 +211,12 @@ View(ptable_10_5)
 
 You can also generate different sample data or generate random record keys for testing purposes for your own test data with the following code:
 ```R
-data = generate_test_data(size = 1000, rkey_range = 255)
+data = generate_test_data(size = 1000, rkey_range = 255, seed = 123)
 ptable = generate_ptable_10_5_rule(ckey_range = 255)
 
 library(data.table)
 data <- fread("input_microdata.csv")
-data = generate_random_rkey(data, rkey_range = 255)
+data = generate_random_rkey(data, rkey_range = 255, seed = 123)
 ```
 
 - **`micro`**: A sample `data.table` containing randomly generated microdata and record keys.
@@ -383,7 +383,7 @@ in the range 0-255.
 
 # Additional Information
 
-The ONS Statistical Methods Library at https://statisticalmethodslibrary.ons.gov.uk/ contains:
+The ONS Statistical Methods Library (statisticalmethodslibrary.ons.gov.uk) contains:
 
 -	Further information about the methods including a link to the GitHub 
 repository which contains detailed API information as part of the method code.

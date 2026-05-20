@@ -41,6 +41,7 @@ generate_record_key_from_ons_id <- function(data, record_key_col) {
 #'
 #' @param data A data.table or data.frame containing the microdata
 #' @param rkey_range The max range for record keys. Default is 255.
+#' @param seed A seed for the random number generator
 #'
 #' @return A data.table with a new integer column `record_key`
 #'
@@ -49,15 +50,17 @@ generate_record_key_from_ons_id <- function(data, record_key_col) {
 #' @examples
 #' library(data.table)
 #' data <- data.table(id = 1:1000)
-#' data <- generate_random_rkey(data, rkey_range = 255)
-generate_random_rkey <- function(data, rkey_range = 255) {
+#' data <- generate_random_rkey(data, rkey_range = 255, seed = 2005)
+generate_random_rkey <- function(data, rkey_range = 255, seed = NULL) {
 
   if (!data.table::is.data.table(data)) {
     stop("Input data must be a 'data.table'!")
   }
   dt <- copy(data)
 
-  set.seed(2025)
+  if(!is.null(seed)){
+    set.seed(seed)
+  }
 
   dt[, ("record_key") := sample(0:rkey_range, .N, replace = TRUE)]
 

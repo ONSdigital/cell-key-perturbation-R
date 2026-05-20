@@ -4,12 +4,14 @@
 \alias{generate_random_rkey}
 \title{Generate and attach random record keys to microdata}
 \usage{
-generate_random_rkey(data, rkey_range = 255)
+generate_random_rkey(data, rkey_range = 255, seed = NULL)
 }
 \arguments{
 \item{data}{A data.table or data.frame containing the microdata}
 
 \item{rkey_range}{The max range for record keys. Default is 255.}
+
+\item{seed}{A seed for the random number generator}
 }
 \value{
 A data.table with a new integer column \code{record_key}
@@ -21,5 +23,5 @@ tables for testing purposes.
 \examples{
 library(data.table)
 data <- data.table(id = 1:1000)
-data <- generate_random_rkey(data, rkey_range = 255)
+data <- generate_random_rkey(data, rkey_range = 255, seed = 2005)
 }

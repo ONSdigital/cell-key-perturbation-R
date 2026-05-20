@@ -1,3 +1,21 @@
+## Resubmission
+
+This is a resubmission with the following changes:
+- Removed redundant "in R/R" wording from the Title and Description fields.
+- Added a reference to the methodology in the DESCRIPTION file using a URL 
+  to the package documentation.
+- Removed the example with "\dontrun" as it requires an active BigQuery 
+  connection and credentials. That function already has another runnable example.
+- Removed fixed calls to set.seed() inside functions and made seeding optional 
+  via function arguments.
+
+
+## Resubmission
+
+This is a resubmission.  
+- Removed a failing URL in a vignette as requested by CRAN.
+
+
 ## R CMD check results
 
 0 errors | 0 warnings | 1 note

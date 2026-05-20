@@ -4,7 +4,7 @@
 #' `generate_test_data()` creates a sample microdata containing randomly
 #'  generated microdata columns and record keys for testing purposes.
 #'
-#' Note: A seed is set for random value generator to obtain same output in
+#' Note: You can set a seed for random value generator to obtain same output in
 #'  different runs. However, the sample microdata included in the package will
 #'  be different than this one, as it was generated from the corresponding
 #'  python package for consistency in test output.
@@ -13,15 +13,18 @@
 #'
 #' @param size Number of rows in the sample microdata. Default is 1000.
 #' @param rkey_range The max range for record keys. Default is 255.
+#' @param seed A seed for the random number generator
 #'
 #' @return A data.table containing randomly generated microdata and record keys
 #' @export
 #'
 #' @examples
 #' data <- generate_test_data(size = 1000)
-#' data <- generate_test_data(size = 1000, rkey_range = 255)
-generate_test_data <- function(size = 1000, rkey_range = 255) {
-  set.seed(111)
+#' data <- generate_test_data(size = 1000, rkey_range = 255, seed = 111)
+generate_test_data <- function(size = 1000, rkey_range = 255, seed = NULL) {
+  if(!is.null(seed)){
+    set.seed(seed)
+  }
 
   record_key_sample <- sample(0:rkey_range, size, replace = TRUE)
 

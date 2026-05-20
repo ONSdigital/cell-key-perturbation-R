@@ -203,12 +203,12 @@ View(ptable_10_5)
 
 You can also generate different sample data or generate random record keys for testing purposes for your own test data with the following code:
 ```R
-data = generate_test_data(size = 1000, key_range = 255)
+data = generate_test_data(size = 1000, key_range = 255, seed = 123)
 ptable = generate_ptable_10_5_rule(key_range = 255)
 
 library(data.table)
 data <- fread("input_microdata.csv")
-data = generate_random_rkey(data, key_range = 255)
+data = generate_random_rkey(data, key_range = 255, seed = 123)
 ```
 
 - **`micro`**: A sample `data.table` containing randomly generated microdata and record keys.

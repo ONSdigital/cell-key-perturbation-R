@@ -107,25 +107,4 @@ query <- create_perturbed_table_bigquery(
 )
 cat(query)
 
-# --- Requires active DBI connection: ---
-\dontrun{
-library(DBI)
-library(bigrquery)
-
-project_id <- system("gcloud config get project", intern = TRUE)
-con <- DBI::dbConnect(
-  bigrquery::bigquery(),
-  project = project_id,
-  bigint = "integer64"
-)
-perturbed_table <- create_perturbed_table_bigquery(
-  con        = con,
-  data       = "my-gcp-project.survey.microdata",
-  ptable     = "my-gcp-project.sdc.ptable",
-  geog       = c("Region"),
-  tab_vars   = c("AgeGroup", "HealthStatus", "Occupation"),
-  record_key = "Record_Key",
-  threshold  = 10
-)
-}
 }

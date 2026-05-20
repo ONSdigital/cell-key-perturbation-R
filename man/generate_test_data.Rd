@@ -4,12 +4,14 @@
 \alias{generate_test_data}
 \title{Generate sample microdata}
 \usage{
-generate_test_data(size = 1000, rkey_range = 255)
+generate_test_data(size = 1000, rkey_range = 255, seed = NULL)
 }
 \arguments{
 \item{size}{Number of rows in the sample microdata. Default is 1000.}
 
 \item{rkey_range}{The max range for record keys. Default is 255.}
+
+\item{seed}{A seed for the random number generator}
 }
 \value{
 A data.table containing randomly generated microdata and record keys
@@ -18,12 +20,12 @@ A data.table containing randomly generated microdata and record keys
 \code{generate_test_data()} creates a sample microdata containing randomly
 generated microdata columns and record keys for testing purposes.
 
-Note: A seed is set for random value generator to obtain same output in
+Note: You can set a seed for random value generator to obtain same output in
 different runs. However, the sample microdata included in the package will
 be different than this one, as it was generated from the corresponding
 python package for consistency in test output.
 }
 \examples{
 data <- generate_test_data(size = 1000)
-data <- generate_test_data(size = 1000, rkey_range = 255)
+data <- generate_test_data(size = 1000, rkey_range = 255, seed = 111)
 }
