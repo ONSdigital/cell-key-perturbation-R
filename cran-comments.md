@@ -1,5 +1,11 @@
 ## Resubmission
 
+This is a resubmission with the following changes: 
+- Limited data.table to a single thread in examples and tests to avoid CPU time 
+ratio notes during CRAN checks.
+
+## Resubmission
+
 This is a resubmission with the following changes:
 - Removed redundant "in R/R" wording from the Title and Description fields.
 - Added a reference to the methodology in the DESCRIPTION file using a URL 

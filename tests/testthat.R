@@ -9,4 +9,8 @@
 library(testthat)
 library(cellkeyperturbation)
 
+if (requireNamespace("data.table", quietly = TRUE)) {
+  data.table::setDTthreads(1)
+}
+
 test_check("cellkeyperturbation")

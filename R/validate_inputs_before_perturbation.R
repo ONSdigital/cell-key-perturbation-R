@@ -27,6 +27,9 @@
 #' @keywords internal
 #'
 #' @examples
+#' if (requireNamespace("data.table", quietly = TRUE)) {
+#'   data.table::setDTthreads(1)
+#' }
 #' validate_inputs(data = micro,
 #'                 ptable = ptable_10_5,
 #'                 record_key = "record_key",

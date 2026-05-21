@@ -9,6 +9,9 @@
 #' @return A data.table assigning a pvalue to each ckey and pcv combination
 #'
 #' @examples
+#' if (requireNamespace("data.table", quietly = TRUE)) {
+#'   data.table::setDTthreads(1)
+#' }
 #' ptable <- generate_ptable_10_5_rule()
 #'
 #' @import data.table

@@ -19,6 +19,9 @@
 #' @export
 #'
 #' @examples
+#' if (requireNamespace("data.table", quietly = TRUE)) {
+#'   data.table::setDTthreads(1)
+#' }
 #' data <- generate_test_data(size = 1000)
 #' data <- generate_test_data(size = 1000, rkey_range = 255, seed = 111)
 generate_test_data <- function(size = 1000, rkey_range = 255, seed = NULL) {
