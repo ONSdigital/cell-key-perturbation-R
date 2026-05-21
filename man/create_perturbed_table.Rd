@@ -57,6 +57,10 @@ The data needs to contain a 'record key' variable which along with the
 ptable allows the process to be repeatable and consistent.
 }
 \examples{
+if (requireNamespace("data.table", quietly = TRUE)) {
+  data.table::setDTthreads(1)
+}
+
 geog <- "var1"
 tab_vars <- c("var5","var8")
 record_key <- "record_key"

@@ -19,6 +19,9 @@ A data.table assigning a pvalue to each ckey and pcv combination
 which means a suppression threshold of 10 and rounding to the nearest 5.
 }
 \examples{
+if (requireNamespace("data.table", quietly = TRUE)) {
+  data.table::setDTthreads(1)
+}
 ptable <- generate_ptable_10_5_rule()
 
 }

@@ -26,6 +26,9 @@ be different than this one, as it was generated from the corresponding
 python package for consistency in test output.
 }
 \examples{
+if (requireNamespace("data.table", quietly = TRUE)) {
+  data.table::setDTthreads(1)
+}
 data <- generate_test_data(size = 1000)
 data <- generate_test_data(size = 1000, rkey_range = 255, seed = 111)
 }
